@@ -11,3 +11,9 @@ rm -f $BREWDIR/opt/*/lib/*.dylib
 
 # Needed for eg mariadb-connector-c
 rm -f $BREWDIR/opt/*/lib/*/*.dylib
+
+# Test
+if [ "$PKG_LIBS_STATIC" ]; then
+PKG_LIBS=$PKG_LIBS_STATIC
+fi
+
