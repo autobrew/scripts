@@ -1,4 +1,5 @@
-BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
+AUTOBREW="$TMPDIR/autobrew"
+BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
@@ -14,15 +15,15 @@ else
 fi
 
 # We have a custom bottle for Mavericks
-HOMEBREW_CACHE="$TMPDIR" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-HOMEBREW_CACHE="$TMPDIR" $BREW install --force-bottle openssl freetype fontconfig gettext glib cairo python \
+HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl freetype fontconfig gettext glib cairo python \
   gobject-introspection gdk-pixbuf harfbuzz pango librsvg 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # We use a custom bottle for Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  HOMEBREW_CACHE="$TMPDIR" $BREW install --force-bottle imagemagick
+  HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle imagemagick
 else
-  HOMEBREW_CACHE="$TMPDIR" $BREW install imagemagick --without-modules --with-zero-configuration \
+  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-fftw --with-webp --with-fontconfig
 fi
 

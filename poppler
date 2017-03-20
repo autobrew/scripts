@@ -1,4 +1,5 @@
-BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
+AUTOBREW="$TMPDIR/autobrew"
+BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
@@ -6,15 +7,15 @@ echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 # Install pkg-config
-HOMEBREW_CACHE="$TMPDIR" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 BREW_DEPS_OPENJPEG=$($BREW deps --include-build -n openjpeg)
-HOMEBREW_CACHE="$TMPDIR" $BREW install --force-bottle $BREW_DEPS_OPENJPEG $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS_OPENJPEG $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Rebuild openjpeg as static lib
-HOMEBREW_CACHE="$TMPDIR" $BREW reinstall openjpeg --with-static  2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall openjpeg --with-static  2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Set flags manually (poppler.pc is broken for static)
 PKG_CFLAGS=`$BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME}`

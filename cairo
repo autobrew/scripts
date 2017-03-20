@@ -1,11 +1,12 @@
-BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
+AUTOBREW="$TMPDIR/autobrew"
+BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-HOMEBREW_CACHE="$TMPDIR" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 $BREW link $($BREW list) --overwrite --force 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=$($BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME})
 PKG_LIBS=$($BREWDIR/opt/pkg-config/bin/pkg-config --libs-only-l --static ${PKG_CONFIG_NAME})

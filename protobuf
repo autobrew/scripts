@@ -1,9 +1,9 @@
-BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
-BREWDIR="$TMPDIR/homebrew"
+AUTOBREW="$TMPDIR/autobrew"
+BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-HOMEBREW_CACHE="$TMPDIR" $BREWDIR/bin/brew install --force-bottle $PKG_BREW_NAME 2>&1 | sed 's/Warning/Note/g'
+HOMEBREW_CACHE="$AUTOBREW" $BREWDIR/bin/brew install --force-bottle $PKG_BREW_NAME 2>&1 | sed 's/Warning/Note/g'
 
 # 2017-03-15: there's a bug in protoc not finding dylibs
 mv $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib $BREWDIR/opt/$PKG_BREW_NAME/bin/
