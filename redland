@@ -1,5 +1,5 @@
 # redland requires pkg-config 
-AUTOBREW="$TMPDIR"
+AUTOBREW=${TMPDIR-/tmp}
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
