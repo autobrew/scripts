@@ -1,6 +1,6 @@
 # V8 needs to tap from homebrew/versions
 AUTOBREW="$TMPDIR/autobrew"
-BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
+BREWDIR="$AUTOBREW-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf "$BREWDIR"
 mkdir -p $BREWDIR
