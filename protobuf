@@ -1,5 +1,5 @@
-AUTOBREW="$TMPDIR/autobrew"
-BREWDIR="$AUTOBREW/$PKG_BREW_NAME"
+AUTOBREW="$TMPDIR"
+BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
