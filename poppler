@@ -1,4 +1,4 @@
-BREWDIR="$TMPDIR/homebrew"
+BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR

@@ -1,4 +1,5 @@
-BREWDIR="$TMPDIR/homebrew"
+# V8 needs to tap from homebrew/versions
+BREWDIR="$TMPDIR/$PKG_BREW_NAME/homebrew"
 BREW="$BREWDIR/bin/brew"
 rm -Rf "$BREWDIR"
 mkdir -p $BREWDIR
