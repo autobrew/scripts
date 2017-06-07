@@ -17,6 +17,11 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS_OPENJPEG $BRE
 # Rebuild openjpeg as static lib
 HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall openjpeg --with-static  2>&1 | perl -pe 's/Warning/Note/gi'
 
+# Need to rebuild fontconfig on Mavericks
+if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
+  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig  2>&1 | perl -pe 's/Warning/Note/gi'
+fi
+
 # Set flags manually (poppler.pc is broken for static)
 PKG_CFLAGS=`$BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME}`
 PKG_LIBS=`$BREWDIR/opt/pkg-config/bin/pkg-config --libs --static ${PKG_CONFIG_NAME} cairo lcms2 libopenjp2 libtiff-4`
