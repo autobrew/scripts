@@ -17,7 +17,7 @@ fi
 # We have a custom bottle for Mavericks
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl freetype fontconfig gettext glib cairo python \
-  gobject-introspection gdk-pixbuf harfbuzz pango librsvg 2>&1 | perl -pe 's/Warning/Note/gi'
+  gobject-introspection gdk-pixbuf harfbuzz pango librsvg graphite2 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # We use a custom bottle for Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
