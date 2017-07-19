@@ -23,8 +23,9 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl freetype fontcon
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle imagemagick
 else
-  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick --without-modules --with-zero-configuration \
+  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-fftw --with-webp --with-fontconfig
+  $BREW link --force imagemagick@6
 fi
 
 # Get the CFLAGS and LIBS
