@@ -14,9 +14,15 @@ else
   curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 fi
 
-# We have a custom bottle for Mavericks
+# Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl freetype fontconfig gettext glib cairo python \
+
+# disable fontconfig post install caching stuff
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
+sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
+
+# We have a custom bottle for Mavericks
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python \
   gobject-introspection gdk-pixbuf harfbuzz pango librsvg graphite2 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # We use a custom bottle for Mavericks
@@ -51,3 +57,7 @@ rm -f $BREWDIR/lib/*.dylib
 # Copy configuration files
 mkdir -p inst/etc
 cp -r $BREWDIR/etc/fonts inst/etc/
+
+# Fix hardcoded cache dir
+sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fonts/fonts.conf
+rm -f inst/etc/fonts/*.bak
