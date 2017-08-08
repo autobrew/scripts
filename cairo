@@ -7,6 +7,12 @@ echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+
+# Fontconfig needs to be rebuid for Mavericks
+if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
+  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig | perl -pe 's/Warning/Note/gi'
+fi
+
 $BREW link $($BREW list) --overwrite --force 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=$($BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME})
 PKG_LIBS=$($BREWDIR/opt/pkg-config/bin/pkg-config --libs-only-l --static ${PKG_CONFIG_NAME})
