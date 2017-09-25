@@ -11,11 +11,7 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/N
 
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-BREW_DEPS_OPENJPEG=$($BREW deps --include-build -n openjpeg)
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS_OPENJPEG $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
-
-# Rebuild openjpeg as static lib
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall openjpeg --with-static  2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Need to rebuild fontconfig on Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
