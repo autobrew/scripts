@@ -5,6 +5,8 @@ rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 mkdir -p inst/bin
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+export HOMEBREW_NO_ANALYTICS=1
+$BREW update
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME gnupg@1.4 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
