@@ -9,6 +9,10 @@ curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C
 # Install pkg-config
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
+# Temporary use old version because static libs are broken in cmake
+$BREW tap r-hub/cran
+$BREW tap-pin r-hub/cran
+
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
@@ -33,3 +37,7 @@ for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
 done
 rm -f $BREWDIR/lib/*.dylib
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+
+# Copy data files
+mkdir -p inst/share
+cp -r $BREWDIR/share/poppler inst/share/
