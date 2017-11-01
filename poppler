@@ -11,7 +11,7 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/N
 
 # Temporary use old version because static libs are broken in cmake
 $BREW tap r-hub/cran
-$BREW tap-pin r-hub/cran
+$BREW tap-pin r-hub/cran 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
