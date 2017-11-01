@@ -20,6 +20,8 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAM
 # Need to rebuild fontconfig on Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig  2>&1 | perl -pe 's/Warning/Note/gi'
+  $BREW install zlib
+  $BREW link --force zlib
 fi
 
 # Set flags manually (poppler.pc is broken for static)
