@@ -43,3 +43,4 @@ rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
 # Copy data files
 mkdir -p inst/share
 cp -r $BREWDIR/share/poppler inst/share/
+PKG_CFLAGS="$PKG_CFLAGS -DBUNDLE_POPPLER_DATA"
