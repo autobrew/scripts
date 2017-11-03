@@ -14,7 +14,7 @@ $BREW tap r-hub/cran 2>&1 | perl -pe 's/Warning/Note/gi'
 $BREW tap-pin r-hub/cran 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Install binary builds
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
+BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Need to rebuild fontconfig on Mavericks
