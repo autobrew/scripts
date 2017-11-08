@@ -1,3 +1,4 @@
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 AUTOBREW=${TMPDIR-/tmp}
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
