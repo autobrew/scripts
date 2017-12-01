@@ -19,7 +19,7 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/N
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install $BREW_DEPS $PKG_BREW_NAME --force-bottle 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --without-gobject-introspection --without-graphite2  2>&1 | perl -pe 's/Warning/Note/gi'
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --without-gobject-introspection 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=$($BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME})
 PKG_LIBS=$($BREWDIR/opt/pkg-config/bin/pkg-config --libs --static ${PKG_CONFIG_NAME} libcroco-0.6 pangocairo)
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
