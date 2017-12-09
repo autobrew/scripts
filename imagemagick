@@ -36,7 +36,6 @@ else
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --without-gobject-introspection
 
   # Workaround for https://github.com/ImageMagick/ImageMagick/issues/890
-  export LIBS=-lltdl
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-fftw --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
   $BREW link --force imagemagick@6
