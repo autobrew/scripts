@@ -8,6 +8,7 @@ echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle libpng jpeg libtiff leptonica ${PKG_BREW_NAME}  2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall leptonica 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=`$BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME}`
 PKG_LIBS=`$BREWDIR/opt/pkg-config/bin/pkg-config --libs --static ${PKG_CONFIG_NAME}`
 PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
