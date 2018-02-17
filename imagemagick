@@ -16,6 +16,10 @@ else
   curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 fi
 
+# Workaround for broken librsvg in core
+$BREW tap r-hub/cran
+$BREW tap-pin r-hub/cran
+
 # Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
