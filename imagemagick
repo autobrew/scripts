@@ -36,9 +36,8 @@ else
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --without-gobject-introspection
 
   # Workaround for broken librsvg in core
-  $BREW tap r-hub/cran
   $BREW unlink librsvg
-  $BREW install r-hub/cran/librsvg
+  $BREW install --force-bottle r-hub/cran/librsvg
 
   # Build IM6 from source
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
