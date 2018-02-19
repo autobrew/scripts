@@ -42,7 +42,7 @@ else
   # Build IM6 from source
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
-  $BREW link --force imagemagick@6
+  $BREW link --force imagemagick@6 libffi gettext
 fi
 
 # Get the CFLAGS and LIBS
