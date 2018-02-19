@@ -12,6 +12,7 @@ if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   curl -fsSL https://github.com/legacybrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
   mkdir -p $BREWDIR/Library/Taps/homebrew
   (cd $BREWDIR/Library/Taps/homebrew; git clone --depth=1 https://github.com/legacybrew/homebrew-core)
+  HOMEBREW_CACHE="$AUTOBREW" $BREW install portable-ruby
 else
   curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 fi
@@ -30,6 +31,7 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gette
 # We use a custom bottle for Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle imagemagick 2>&1 | perl -pe 's/Warning/Note/gi'
+  $BREW link --force libffi gettext
 else
   # graphite2 static library is broken for now
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --with-cairo --without-gobject-introspection --without-graphite2
