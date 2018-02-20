@@ -42,7 +42,7 @@ else
   $BREW install --force-bottle r-hub/cran/librsvg
 
   # Build IM6 from source
-  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
+  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --HEAD --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
   $BREW link --force imagemagick@6 libffi gettext
 fi
