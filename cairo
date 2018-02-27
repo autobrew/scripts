@@ -9,6 +9,7 @@ curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C
 export HOMEBREW_NO_ANALYTICS=1
 $BREW update
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
+HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Fontconfig needs to be rebuid for Mavericks
@@ -16,14 +17,14 @@ if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig | perl -pe 's/Warning/Note/gi'
 fi
 
-$BREW link $($BREW list) --overwrite --force 2>&1 | perl -pe 's/Warning/Note/gi'
+$BREW link --force libffi gettext
 PKG_CFLAGS=$($BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME})
 PKG_LIBS=$($BREWDIR/opt/pkg-config/bin/pkg-config --libs-only-l --static ${PKG_CONFIG_NAME})
 rm -f $BREWDIR/opt/*/lib/*.dylib
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
+for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
