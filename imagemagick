@@ -35,11 +35,13 @@ if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
 else
   # graphite2 static library is broken for now
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --with-cairo --without-gobject-introspection --without-graphite2
+
+  #TODO: this fails on CRAN:
   HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --without-gobject-introspection
 
   # Workaround for broken librsvg in core
   $BREW unlink librsvg
-  $BREW install --force-bottle r-hub/cran/librsvg
+  $BREW install --force-bottle r-hub/cran/librsvg | perl -pe 's/Warning/Note/gi'
 
   # Build IM6 from source
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --without-modules --with-zero-configuration \
