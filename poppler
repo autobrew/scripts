@@ -10,10 +10,6 @@ curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C
 # Install pkg-config
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
-# Temporary use old version because static libs are broken in cmake
-$BREW tap r-hub/cran 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW tap-pin r-hub/cran 2>&1 | perl -pe 's/Warning/Note/gi'
-
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
