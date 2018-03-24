@@ -20,30 +20,26 @@ fi
 # Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
-# disable fontconfig post install caching stuff
+# Disable fontconfig post install caching stuff
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
 sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
 
-# We have a custom bottle for Mavericks
+# Some dependencies
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python \
-  gobject-introspection gdk-pixbuf harfbuzz pango librsvg graphite2 2>&1 | perl -pe 's/Warning/Note/gi'
+  gobject-introspection gdk-pixbuf harfbuzz pango 2>&1 | perl -pe 's/Warning/Note/gi'
+
+# Needed for static librsvg
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --with-cairo --without-gobject-introspection --without-graphite2 --build-bottle
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --build-bottle
+HOMEBREW_CACHE="$AUTOBREW" $BREW install r-hub/cran/librsvg
+HOMEBREW_CACHE="$AUTOBREW" $BREW install homebrew/core/librsvg
+HOMEBREW_CACHE="$AUTOBREW" $BREW switch librsvg "2.40.19"
 
 # We use a custom bottle for Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
   HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle imagemagick 2>&1 | perl -pe 's/Warning/Note/gi'
   $BREW link --force libffi gettext
 else
-  # graphite2 static library is broken for now
-  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --build-bottle --with-cairo --without-gobject-introspection --without-graphite2
-
-  #TODO: this fails on CRAN:
-  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --build-bottle --without-modules --with-included-loaders=yes
-
-  # Workaround for broken librsvg in core
-  $BREW unlink librsvg
-  $BREW install --force-bottle r-hub/cran/librsvg | perl -pe 's/Warning/Note/gi'
-  $BREW switch librsvg "2.40.19"
-
   # Build IM6 from source
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --build-bottle --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
