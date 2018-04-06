@@ -28,12 +28,19 @@ sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/f
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python \
   gobject-introspection gdk-pixbuf harfbuzz pango 2>&1 | perl -pe 's/Warning/Note/gi'
 
-# Needed for static librsvg
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --with-cairo --without-gobject-introspection --without-graphite2 --build-bottle
+# Required to build GLIB stuff from source
+export HOMEBREW_NO_ENV_FILTERING=1
+export XDG_DATA_DIRS="$BREWDIR/share"
+
+# Harfbuzz static lib is missing
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --without-graphite2 --build-bottle
+
+# No runtime loaders (for rsvg raster rendering)
 HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --build-bottle
 HOMEBREW_CACHE="$AUTOBREW" $BREW install r-hub/cran/librsvg
-HOMEBREW_CACHE="$AUTOBREW" $BREW install homebrew/core/librsvg
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle homebrew/core/librsvg
 HOMEBREW_CACHE="$AUTOBREW" $BREW switch librsvg "2.40.19"
+unset HOMEBREW_NO_ENV_FILTERING
 
 # We use a custom bottle for Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
