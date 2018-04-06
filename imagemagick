@@ -6,16 +6,7 @@ BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-
-# Revert to Sept 16, 2016, last day of homebrew support for OSX 10.9 Mavericks
-if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  curl -fsSL https://github.com/legacybrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-  mkdir -p $BREWDIR/Library/Taps/homebrew
-  (cd $BREWDIR/Library/Taps/homebrew; git clone --depth=1 https://github.com/legacybrew/homebrew-core)
-  HOMEBREW_CACHE="$AUTOBREW" $BREW install portable-ruby
-else
-  curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-fi
+curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 # Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
@@ -42,12 +33,11 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle homebrew/core/librsvg
 HOMEBREW_CACHE="$AUTOBREW" $BREW switch librsvg "2.40.19"
 unset HOMEBREW_NO_ENV_FILTERING
 
-# We use a custom bottle for Mavericks
-if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle imagemagick 2>&1 | perl -pe 's/Warning/Note/gi'
+# Build IM6 from source with to enable extra features
+if [ $PKG_BREW_NAME = "librsvg" ]; then
+  echo "Building librsvg only"
   $BREW link --force libffi gettext
 else
-  # Build IM6 from source
   HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --build-bottle --without-modules --with-zero-configuration \
   --with-librsvg --with-pango --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
   $BREW link --force imagemagick@6 libffi gettext
