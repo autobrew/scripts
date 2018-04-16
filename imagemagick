@@ -16,15 +16,15 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe
 sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
 
 # Some dependencies
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python \
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python@2 \
   gobject-introspection gdk-pixbuf harfbuzz pango 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Required to build GLIB stuff from source
 export HOMEBREW_NO_ENV_FILTERING=1
 export XDG_DATA_DIRS="$BREWDIR/share"
 
-# Harfbuzz static lib is missing
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --without-graphite2 --build-bottle
+# Graphite static lib is missing
+HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --without-graphite2 --without-icu --build-bottle
 
 # No runtime loaders (for rsvg raster rendering)
 HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --build-bottle
