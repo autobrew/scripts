@@ -1,1 +1,45 @@
-imagemagick
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+export HOMEBREW_NO_ANALYTICS=1
+AUTOBREW=${TMPDIR-/tmp}
+BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
+BREW="$BREWDIR/bin/brew"
+rm -Rf $BREWDIR
+mkdir -p $BREWDIR
+echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
+curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+
+# Tap from: https://github.com/r-hub/homebrew-cran
+$BREW tap r-hub/cran
+$BREW tap-pin r-hub/cran
+
+# Build from source
+HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+
+# Disable fontconfig post install caching stuff
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
+sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
+
+# Install dependencies
+PKG_BREW_NAME="r-hub/cran/librsvg"
+BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+$BREW link --force libffi gettext
+
+# Get the CFLAGS and LIBS
+PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
+PKG_CFLAGS=$($PKG_CONFIG --cflags $PKG_CONFIG_NAME)
+PKG_CFLAGS="$PKG_CFLAGS -DBUILD_AUTOBREW"
+PKG_LIBS=$($PKG_CONFIG --libs-only-l --static $PKG_CONFIG_NAME libpng libcroco-0.6 pangocairo gmodule-2.0 fribidi)
+PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS -lexpat \$(FOUNDATION_LIBS)" #pkg-config misses a few paths
+rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
+rm -f $BREWDIR/lib/*.dylib
