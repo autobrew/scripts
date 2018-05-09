@@ -19,9 +19,11 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/N
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
 sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
 
-# Some dependencies
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python@2 \
-  gobject-introspection gdk-pixbuf harfbuzz pango librsvg imagemagick@6 2>&1 | perl -pe 's/Warning/Note/gi'
+# Install dependencies
+PKG_BREW_NAME="r-hub/cran/imagemagick@6"
+BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 $BREW link --force imagemagick@6 libffi gettext
 
 # Get the CFLAGS and LIBS
