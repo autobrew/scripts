@@ -8,6 +8,10 @@ mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
+# Tap from: https://github.com/r-hub/homebrew-cran
+$BREW tap r-hub/cran
+$BREW tap-pin r-hub/cran
+
 # Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
@@ -17,31 +21,8 @@ sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/f
 
 # Some dependencies
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle openssl fontconfig gettext glib cairo python@2 \
-  gobject-introspection gdk-pixbuf harfbuzz pango 2>&1 | perl -pe 's/Warning/Note/gi'
-
-# Required to build GLIB stuff from source
-export HOMEBREW_NO_ENV_FILTERING=1
-export XDG_DATA_DIRS="$BREWDIR/share"
-
-# Graphite static lib is missing
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall harfbuzz --without-graphite2 --without-icu4c --build-bottle
-
-# No runtime loaders (for rsvg raster rendering)
-HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall gdk-pixbuf --without-modules --with-included-loaders=yes --build-bottle
-HOMEBREW_CACHE="$AUTOBREW" $BREW install r-hub/cran/librsvg
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle homebrew/core/librsvg
-HOMEBREW_CACHE="$AUTOBREW" $BREW switch librsvg "2.40.19"
-unset HOMEBREW_NO_ENV_FILTERING
-
-# Build IM6 from source with to enable extra features
-if [ $PKG_BREW_NAME = "librsvg" ]; then
-  echo "Building librsvg only"
-  $BREW link --force libffi gettext
-else
-  HOMEBREW_CACHE="$AUTOBREW" $BREW install imagemagick@6 --build-bottle --without-modules --with-zero-configuration \
-  --with-librsvg --with-pango --with-webp --with-fontconfig --with-openjpeg 2>&1 | perl -pe 's/Warning/Note/gi'
-  $BREW link --force imagemagick@6 libffi gettext
-fi
+  gobject-introspection gdk-pixbuf harfbuzz pango librsvg imagemagick@6 2>&1 | perl -pe 's/Warning/Note/gi'
+$BREW link --force librsvg imagemagick@6 libffi gettext
 
 # Get the CFLAGS and LIBS
 PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
