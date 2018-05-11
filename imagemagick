@@ -12,6 +12,9 @@ curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C
 $BREW tap r-hub/cran
 $BREW tap-pin r-hub/cran
 
+# Temporary fix?
+$BREW cleanup -s 2>&1 | perl -pe 's/Warning/Note/gi'
+
 # Build from source
 HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 
