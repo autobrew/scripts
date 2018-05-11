@@ -21,7 +21,7 @@ PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
 PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
 PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
 PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
-export PKG_CONFIG_PATH=$PC_PATH
+export PKG_CONFIG_LIBDIR=$PC_PATH
 
 # Disable fontconfig post install caching stuff
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
