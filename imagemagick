@@ -12,9 +12,6 @@ curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C
 $BREW tap r-hub/cran
 $BREW tap-pin r-hub/cran
 
-# Temporary fix?
-$BREW cleanup -s 2>&1 | perl -pe 's/Warning/Note/gi'
-
 # Do not build pkg-config from source, so need to override hardcoded paths
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
