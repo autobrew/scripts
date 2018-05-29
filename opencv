@@ -37,3 +37,8 @@ for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
 done
 rm -f $BREWDIR/lib/*.dylib
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+
+# Copy share files
+mkdir -p inst/share
+cp -r $BREWDIR/opt/opencv/share/OpenCV/haarcascades inst/share/
+cp -r $BREWDIR/opt/opencv/share/OpenCV/lbpcascades inst/share/
