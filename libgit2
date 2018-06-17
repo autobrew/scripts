@@ -15,6 +15,6 @@ rm -f $BREWDIR/Cellar/$PKG_BREW_NAME/*/lib/*.dylib
 rm -f $BREWDIR/opt/*/lib/*.dylib
 
 PKG_CFLAGS="-I${BREWDIR}/opt/${PKG_BREW_NAME}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lgit2 -lssh2"
+PKG_LIBS="-L${BREWDIR}/lib -lgit2 -lssh2 -L${BREWDIR}/opt/openssl/lib -lcrypto -lcurl"
 
 unset HOMEBREW_NO_ANALYTICS
