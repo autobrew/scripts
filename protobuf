@@ -8,9 +8,14 @@ echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 export HOMEBREW_NO_ANALYTICS=1
 $BREW update
+
+# Tap from: https://github.com/r-hub/homebrew-cran
+$BREW tap r-hub/cran
+$BREW tap-pin r-hub/cran
+
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle r-hub/cran/protobuf 2>&1 | perl -pe 's/Warning/Note/gi'
 
 # 2017-03-15: there's a bug in protoc not finding dylibs
 mv $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib $BREWDIR/opt/$PKG_BREW_NAME/bin/
