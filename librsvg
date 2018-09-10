@@ -1,3 +1,6 @@
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 export HOMEBREW_NO_ANALYTICS=1
 AUTOBREW=${TMPDIR-/tmp}
@@ -7,7 +10,7 @@ BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -fsSL https://github.com/Homebrew/brew/tarball/1.7.1 | tar xz --strip 1 -C $BREWDIR
 
 # Tap from: https://github.com/r-hub/homebrew-cran
 $BREW tap r-hub/cran
