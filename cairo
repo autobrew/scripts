@@ -17,20 +17,25 @@ rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-export HOMEBREW_NO_ANALYTICS=1
 $BREW update
+
+# Do not build pkg-config from source, so need to override hardcoded paths
+HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
+PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
+PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
+PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
+echo "PC_PATH=$PC_PATH"
+
+$BREW deps -n $PKG_BREW_NAME
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-HOMEBREW_CACHE="$AUTOBREW" $BREW install pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 
-# Fontconfig needs to be rebuid for Mavericks
-if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig | perl -pe 's/Warning/Note/gi'
-fi
-
 $BREW link --force libffi gettext
-PKG_CFLAGS=$($BREWDIR/opt/pkg-config/bin/pkg-config --cflags ${PKG_CONFIG_NAME})
-PKG_LIBS=$($BREWDIR/opt/pkg-config/bin/pkg-config --libs-only-l --static ${PKG_CONFIG_NAME})
+export PKG_CONFIG_PATH=$PC_PATH
+export PKG_CONFIG_LIBDIR=$PC_PATH
+PKG_CFLAGS=$($PKG_CONFIG --cflags ${PKG_CONFIG_NAME})
+PKG_LIBS=$($PKG_CONFIG --libs-only-l --static ${PKG_CONFIG_NAME})
 rm -f $BREWDIR/opt/*/lib/*.dylib
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
 

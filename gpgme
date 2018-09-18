@@ -15,16 +15,17 @@ BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
-mkdir -p inst/bin
+echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-export HOMEBREW_NO_ANALYTICS=1
 $BREW update
+$BREW deps -n $PKG_BREW_NAME
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME gnupg@1.4 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
 PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
 
 # Ship a standalone 'gpg'
+mkdir -p inst/bin
 cp -f $BREWDIR/opt/gnupg@1.4/bin/gpg1 inst/bin/gpg
 
 # Build and ship a standalone pinentry
