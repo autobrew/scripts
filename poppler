@@ -1,6 +1,13 @@
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
+# Offical Homebrew no longer supports El-Capitain
+if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
+UPSTREAM_ORG="legacybrew"
+else
+UPSTREAM_ORG="Homebrew"
+fi
+
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 AUTOBREW=${TMPDIR-/tmp}
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
@@ -8,7 +15,7 @@ BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/Homebrew/brew/tarball/1.7.1 | tar xz --strip 1 -C $BREWDIR
+curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 # Do not build pkg-config from source, so need to override hardcoded paths
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'

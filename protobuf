@@ -1,6 +1,13 @@
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
+# Offical Homebrew no longer supports El-Capitain
+if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
+UPSTREAM_ORG="legacybrew"
+else
+UPSTREAM_ORG="Homebrew"
+fi
+
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 AUTOBREW=${TMPDIR-/tmp}
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
@@ -9,8 +16,7 @@ BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/Homebrew/brew/tarball/1.7.1 | tar xz --strip 1 -C $BREWDIR
-export HOMEBREW_NO_ANALYTICS=1
+curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 $BREW update
 
 # Tap from: https://github.com/r-hub/homebrew-cran
