@@ -17,7 +17,6 @@ rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-$BREW update
 
 # Do not build pkg-config from source, so need to override hardcoded paths
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'

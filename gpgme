@@ -17,7 +17,8 @@ rm -Rf $BREWDIR
 mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-$BREW update
+
+# Calculate deps
 $BREW deps -n $PKG_BREW_NAME
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME gnupg@1.4 2>&1 | perl -pe 's/Warning/Note/gi'
