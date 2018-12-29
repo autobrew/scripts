@@ -1,0 +1,2 @@
+curl https://sh.rustup.rs -sSf | bash -s -- -y
+sed -e "s|@cargobin@|${HOME}/.cargo/bin/cargo|" src/Makevars.in > src/Makevars
