@@ -1,12 +1,8 @@
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-# Offical Homebrew no longer supports El-Capitain
-if [ $(sw_vers -productVersion | grep "10\\.1[123]") ]; then
+# Offical Homebrew formula can't be statically linked
 UPSTREAM_ORG="autobrew"
-else
-UPSTREAM_ORG="Homebrew"
-fi
 
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 AUTOBREW=${TMPDIR-/tmp}
@@ -18,24 +14,14 @@ mkdir -p $BREWDIR
 echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
-# Custom bottles from: https://github.com/r-hub/homebrew-cran
-$BREW tap r-hub/cran
-$BREW tap-pin r-hub/cran
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-
 # Install bottle + dependencies
+$BREW deps -n $PKG_BREW_NAME 2>/dev/null
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-rm -f $BREWDIR/Cellar/$PKG_BREW_NAME/*/lib/*.dylib
-rm -f $BREWDIR/opt/*/lib/*.dylib
 
-# Needed for eg mariadb-connector-c
-rm -f $BREWDIR/opt/*/lib/*/*.dylib
-
-# Test
-if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS=$PKG_LIBS_STATIC
-fi
+# Hardcode this for my custom autobrew build
+rm -f $BREWDIR/lib/*.dylib
+PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow -lthrift -llz4 -lboost_regex -ldouble-conversion"
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
