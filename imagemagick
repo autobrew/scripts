@@ -37,7 +37,7 @@ $BREW deps -n $PKG_BREW_NAME 2>/dev/null
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW link --force $PKG_BREW_NAME libffi gettext
+$BREW link --force $PKG_BREW_NAME gettext
 
 # Get the CFLAGS and LIBS
 export PKG_CONFIG_PATH=$PC_PATH
