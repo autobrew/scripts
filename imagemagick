@@ -9,7 +9,6 @@ UPSTREAM_ORG="Homebrew"
 fi
 
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-export HOMEBREW_NO_ANALYTICS=1
 AUTOBREW=${TMPDIR-/tmp}
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
@@ -30,12 +29,15 @@ PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFI
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
 sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/homebrew/homebrew-core/Formula/fontconfig.rb"
 
+# Use old IM for now
+PKG_BREW_NAME="imagemagick@6"
+
 # Install dependencies
 $BREW deps -n $PKG_BREW_NAME 2>/dev/null
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
 HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW link --force imagemagick@6 libffi gettext
+$BREW link --force $PKG_BREW_NAME libffi gettext
 
 # Get the CFLAGS and LIBS
 export PKG_CONFIG_PATH=$PC_PATH
