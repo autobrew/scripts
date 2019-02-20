@@ -1,6 +1,8 @@
-url <- 'https://api.github.com/search/code?q=autobrew+in:file+filename:configure+user:cran'
-repos <- jsonlite::fromJSON(url)
-pkgs <- sort(unique(repos$items$repository$name))
+# Find cran packages with an autobrew script
+# You can set a GITHUB_PAT in travis settings
+res <- gh::gh('/search/code?q=autobrew+in:file+filename:configure+user:cran')
+pkgs <- vapply(res$items, function(x){x$repository$name}, "")
+pkgs <- sort(unique(pkgs))
 print(pkgs)
 
 # Install binary packages + dependencies
@@ -20,7 +22,7 @@ results <- sapply(pkgs, function(pkg){
 
 # Check if everything is installed
 if(any(!results)){
-	stop("Packages failed to install:", paste(names(which(!results))), collapse = ", ")
+	stop("Packages failed to install: ", paste(names(which(!results)), collapse = ", "))
 }
 print("Great success!")
 print(pkgs)

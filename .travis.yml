@@ -15,7 +15,7 @@ before_install:
   - sudo networksetup -setdnsservers Ethernet 1.1.1.1
 
 install:
-  R -e 'install.packages(c("curl", "jsonlite"))'
+  R -e 'install.packages("gh")'
 
 script:
   - Rscript testcran.R
