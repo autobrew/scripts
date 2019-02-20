@@ -20,7 +20,7 @@ results <- sapply(pkgs, function(pkg){
 
 # Check if everything is installed
 if(any(!results)){
-	stop("Packages failed to install:", names(which(results)))
+	stop("Packages failed to install:", paste(names(which(!results))), collapse = ", ")
 }
 print("Great success!")
 print(pkgs)
