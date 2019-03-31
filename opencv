@@ -36,10 +36,10 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAM
 export PKG_CONFIG_PATH=$PC_PATH
 export PKG_CONFIG_LIBDIR=$PC_PATH
 PKG_CFLAGS=$($PKG_CONFIG --cflags $PKG_CONFIG_NAME)
-PKG_LIBS_OPENCV=$($PKG_CONFIG --libs --static ${PKG_CONFIG_NAME})
-#PKG_LIBS_STATIC="-ltbb -lippicv -lippiw -littnotify -llibjpeg-turbo -llibwebp -lpng -ltiff"
-#PKG_LIBS_EXTRA=$($PKG_CONFIG --libs --static openexr libavdevice)
-PKG_LIBS="$PKG_LIBS_OPENCV $PKG_LIBS_STATIC $PKG_LIBS_EXTRA"
+PKG_LIBS=$($PKG_CONFIG --libs --static ${PKG_CONFIG_NAME})
+
+# HACK: libtbb already bundles libittnotify so we don't link both
+PKG_LIBS="${PKG_LIBS//-littnotify}"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
