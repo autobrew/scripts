@@ -1,6 +1,5 @@
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
-export PKG_BREW_NAME="openssl@1.1"
 
 # Offical Homebrew no longer supports El-Capitain
 if [ $(sw_vers -productVersion | grep "10\\.1[123]") ]; then
@@ -34,3 +33,6 @@ unset HOMEBREW_NO_AUTO_UPDATE
 
 PKG_CFLAGS=""
 PKG_LIBS="-lssl -lcrypto $SASL_LIBS"
+
+echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
+
