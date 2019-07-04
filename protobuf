@@ -15,7 +15,7 @@ BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
-echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
+echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 $BREW deps -n $PKG_BREW_NAME 2>/dev/null
@@ -25,3 +25,5 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAM
 # 2017-03-15: there's a bug in protoc not finding dylibs
 mv $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib $BREWDIR/opt/$PKG_BREW_NAME/bin/
 export DYLD_LIBRARY_PATH="$BREWDIR/opt/$PKG_BREW_NAME/bin"
+
+echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
