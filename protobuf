@@ -26,4 +26,11 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAM
 mv $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib $BREWDIR/opt/$PKG_BREW_NAME/bin/
 export DYLD_LIBRARY_PATH="$BREWDIR/opt/$PKG_BREW_NAME/bin"
 
-echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  DESTFILE="$BREWDIR/opt/$PKG_BREW_NAME/lib/libbrew$LIBNAME.a"
+  cp -f $FILE $DESTFILE && echo "created $DESTFILE"
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME/-lbrew$LIBNAME/g")
+done
