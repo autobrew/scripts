@@ -21,7 +21,7 @@ HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAM
 
 # Hardcode this for my custom autobrew build
 rm -f $BREWDIR/lib/*.dylib
-PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow -lthrift -llz4 -lboost_regex -ldouble-conversion"
+PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow -lthrift -llz4 -lboost_system -lboost_filesystem -lboost_regex -ldouble-conversion -lsnappy"
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
