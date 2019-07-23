@@ -60,8 +60,6 @@ rm -f $BREWDIR/lib/*.dylib
 
 # Copy configuration files
 mkdir -p inst/etc
-cp -r $BREWDIR/etc/fonts inst/etc/
-
-# Fix hardcoded cache dir
-sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fonts/fonts.conf
-rm -f inst/etc/fonts/*.bak
+cp -rf /opt/X11/lib/X11/fontconfig inst/etc/ || exit 0
+sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
+rm -f inst/etc/fontconfig/*.bak

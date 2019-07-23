@@ -34,3 +34,4 @@ for FILE in $BREWDIR/lib/*.a; do
   cp -f $FILE $DESTFILE && echo "created $DESTFILE"
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME/-lbrew$LIBNAME/g")
 done
+
