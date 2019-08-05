@@ -29,7 +29,7 @@ for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
   LIBNAME=`echo "${BASENAME%.*}" | cut -c4-`
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
   echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
-  PKG_LIBS=`echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g"`
+  PKG_LIBS=`echo $PKG_LIBS | sed "s/-l$LIBNAME/-lbrew$LIBNAME/g"`
 done
 
 unset HOMEBREW_NO_ANALYTICS
