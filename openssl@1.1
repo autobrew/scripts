@@ -37,4 +37,8 @@ unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
 
 echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
+
+# Disable tests which fail on CRAN for whatever reason
+if [ "$PKG_TEST_FILE" ]; then
 echo "#include <stdio.h>" > $PKG_TEST_FILE
+fi
