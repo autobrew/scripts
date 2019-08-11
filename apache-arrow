@@ -34,3 +34,5 @@ done
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
+
+rm -f tests/testthat.R
