@@ -2,7 +2,7 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 # Offical Homebrew no longer supports El-Capitain
-if [ $(sw_vers -productVersion | grep "10\\.1[123]") ]; then
+if [ $(sw_vers -productVersion | grep "10\\.1[1-4]") ]; then
 UPSTREAM_ORG="autobrew"
 else
 UPSTREAM_ORG="Homebrew"
