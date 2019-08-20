@@ -32,9 +32,8 @@ fi
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
 
+# Seems to be needed on CRAN ??
+if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
 echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
-
-# Disable tests which fail on CRAN for whatever reason
-if [ "$PKG_TEST_FILE" ]; then
 echo "#include <stdio.h>" > $PKG_TEST_FILE
 fi
