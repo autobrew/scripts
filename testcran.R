@@ -5,6 +5,10 @@ pkgs <- vapply(res$items, function(x){x$repository$name}, "")
 pkgs <- sort(unique(pkgs))
 print(pkgs)
 
+# Packages I don't care about
+# skiplist <- c("rpg")
+# pkgs <- setdiff(pkgs, skiplist)
+
 # Install binary packages + dependencies
 install.packages(pkgs, type = "binary")
 
