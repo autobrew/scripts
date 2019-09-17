@@ -15,7 +15,8 @@ echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 # Do not build pkg-config from source, so need to override hardcoded paths
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+export HOMEBREW_CACHE="$AUTOBREW"
+$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
 PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
 PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
@@ -23,11 +24,11 @@ PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFI
 
 # Install binary builds
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
+$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
 
 # Need to rebuild fontconfig on Mavericks
 if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  HOMEBREW_CACHE="$AUTOBREW" $BREW reinstall fontconfig --build-bottle 2>&1 | perl -pe 's/Warning/Note/gi'
+  $BREW reinstall fontconfig --build-bottle 2>&1 | perl -pe 's/Warning/Note/gi'
   $BREW install zlib
   $BREW link --force zlib
 fi

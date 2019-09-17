@@ -15,7 +15,8 @@ echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
 curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
 
 # Do not build pkg-config from source, so need to override hardcoded paths
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
+export HOMEBREW_CACHE="$AUTOBREW"
+$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
 PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
 PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
 PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
@@ -24,7 +25,7 @@ echo "PC_PATH=$PC_PATH"
 
 $BREW deps -n $PKG_BREW_NAME
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-HOMEBREW_CACHE="$AUTOBREW" $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 
 $BREW link --force gettext
 export PKG_CONFIG_PATH=$PC_PATH
