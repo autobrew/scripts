@@ -16,6 +16,7 @@ matrix:
 
 before_install:
   - sudo networksetup -setdnsservers Ethernet 1.1.1.1
+  - sudo chmod 400 ~/Library/Logs ~/Library/Caches
   - sudo cat /usr/lib/pkgconfig/libpq.pc | sed 's|.Internal||g' | sed 's|/local||g' > /usr/local/lib/pkgconfig/libpq.pc
 
 install:
