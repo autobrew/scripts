@@ -35,15 +35,4 @@ rm -f $BREWDIR/opt/*/lib/*.dylib
 rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
 
 # Hack for unixodbc dependency
-PKG_LIBS="$PKG_LIBS -lltdl"
-
-# Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/lib/*.a; do
-  BASENAME=$(basename $FILE)
-  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
-done
-rm -f $BREWDIR/lib/*.dylib
-PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
+#sed -i.bak 's/Libs.private:/Libs.private: -lltdb/' "$BREWDIR/opt/redland/lib/pkgconfig/redland.pc"
