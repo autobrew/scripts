@@ -23,7 +23,8 @@ install:
   R -e 'install.packages("gh")'
 
 script:
-  - Rscript testcran.R
+  - mkdir -m 400 fakehome
+  - HOME="$PWD/fakehome" Rscript testcran.R
 
 branches:
   only:
