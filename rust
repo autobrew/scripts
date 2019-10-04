@@ -1,2 +1,9 @@
+# Install Rust compilers in tmpdir
+# See: https://github.com/rust-lang/rustup.rs#environment-variables
+AUTOBREW=${TMPDIR-/tmp}
+export CARGO_HOME="${AUTOBREW}/.cargo"
+export RUSTUP_HOME="${AUTOBREW}/.rustup"
+
+# Run the online installation bootstrapper
 curl https://sh.rustup.rs -sSf | bash -s -- -y
-sed -e "s|@cargobin@|${HOME}/.cargo/bin/cargo|" src/Makevars.in > src/Makevars
+sed -e "s|@cargobin@|${CARGO_HOME}/bin/cargo|" src/Makevars.in > src/Makevars
