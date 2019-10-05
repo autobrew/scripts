@@ -23,7 +23,9 @@ install:
   R -e 'install.packages("gh")'
 
 script:
-  - mkdir -m 400 fakehome
+  - mkdir fakehome
+  - cp ~/.gitconfig fakehome/
+  - chmod 500 fakehome
   - HOME="$PWD/fakehome" Rscript testcran.R
 
 branches:
