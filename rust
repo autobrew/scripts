@@ -1,9 +1,19 @@
-# Install Rust compilers in tmpdir
-# See: https://github.com/rust-lang/rustup.rs#environment-variables
+# CRAN builder doesn't allow writing in $HOME so we build from TMPDIR
+# https://github.com/rust-lang/rustup.rs#environment-variables
+DEFAULT_HOME="${HOME}/.cargo"
+
+# Test if DEFAULT_HOME is writable
+if mkdir -p ${DEFAULT_HOME}/.test; then
+echo "Using default rust and cargo settings"
+CARGO="${DEFAULT_HOME}/bin/cargo"
+else
+echo "Home is unwritable, running cargo from tempdir"
 AUTOBREW=${TMPDIR-/tmp}
 export CARGO_HOME="${AUTOBREW}/.cargo"
 export RUSTUP_HOME="${AUTOBREW}/.rustup"
+CARGO="CARGO_HOME=${CARGO_HOME} RUSTUP_HOME=${RUSTUP_HOME} ${CARGO_HOME}/bin/cargo"
+fi
 
 # Run the online installation bootstrapper
-curl https://sh.rustup.rs -sSf | bash -s -- -y
-sed -e "s|@cargobin@|${CARGO_HOME}/bin/cargo|" src/Makevars.in > src/Makevars
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y
+sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars
