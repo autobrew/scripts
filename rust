@@ -12,11 +12,11 @@ AUTOBREW=${TMPDIR-/tmp}
 export CARGO_HOME="${AUTOBREW}/.cargo"
 export RUSTUP_HOME="${AUTOBREW}/.rustup"
 CARGO="CARGO_HOME=${CARGO_HOME} RUSTUP_HOME=${RUSTUP_HOME} ${CARGO_HOME}/bin/cargo"
-
+RUSTUP_ARGS="--no-modify-path"
 # Temp workaround for: https://github.com/rust-lang/rustup.rs/issues/2040
-export HOME=$AUTOBREW
+# export HOME=$AUTOBREW
 fi
 
 # Run the online installation bootstrapper
-curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y $RUSTUP_ARGS
 sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars
