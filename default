@@ -28,8 +28,6 @@ rm -f $BREWDIR/opt/*/lib/*/*.dylib
 # Test
 if [ "$PKG_LIBS_STATIC" ]; then
 PKG_LIBS=$PKG_LIBS_STATIC
-else
-PKG_LIBS="$PKG_LIBS -lltdl"
 fi
 
 unset HOMEBREW_NO_ANALYTICS
