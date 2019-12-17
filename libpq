@@ -28,10 +28,8 @@ rm -f $BREWDIR/opt/*/lib/*.dylib
 # Needed for eg mariadb-connector-c
 rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
-# Also add keg-only openssl to linker path
-if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS="-L$BREWDIR/opt/openssl/lib $PKG_LIBS_STATIC"
-fi
+# Also add openssl 1.1 to linker path
+PKG_LIBS="-L$BREWDIR/opt/openssl@1.1/lib -lpq -lpgport -lpgcommon -lssl -lcrypto -lldap"
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
