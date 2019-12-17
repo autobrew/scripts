@@ -28,6 +28,3 @@ script:
   - chmod 500 fakehome
   - HOME="$PWD/fakehome" Rscript testcran.R
 
-branches:
-  only:
-  - gh-pages
