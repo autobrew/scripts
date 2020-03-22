@@ -10,6 +10,8 @@ matrix:
   include:
     - osx_image: xcode11.3
     - osx_image: xcode10.1
+      before_script:
+        - git config --global protocol.version 1
     - osx_image: xcode7.3
       before_script:
         - sed -i.bak 's/-isysroot /-I/g' $(R RHOME)/etc/Makeconf
