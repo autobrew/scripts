@@ -7,7 +7,7 @@ UPSTREAM_ORG="autobrew"
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 AUTOBREW=${TMPDIR-/tmp}
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
+BREWDIR="$AUTOBREW/build-${PKG_BREW_NAME// /}"
 BREW="$BREWDIR/bin/brew"
 rm -Rf $BREWDIR
 mkdir -p $BREWDIR
