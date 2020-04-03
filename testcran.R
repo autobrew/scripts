@@ -1,5 +1,6 @@
 # Find cran packages with an autobrew script
 # You can set a GITHUB_PAT in travis settings
+options(repos = 'https://cloud.r-project.org')
 res <- gh::gh('/search/code?q=autobrew+in:file+filename:configure+user:cran')
 pkgs <- vapply(res$items, function(x){x$repository$name}, "")
 pkgs <- sort(unique(pkgs))

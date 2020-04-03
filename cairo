@@ -27,7 +27,6 @@ $BREW deps -n $PKG_BREW_NAME
 BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
 $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
 
-$BREW link --force gettext
 export PKG_CONFIG_PATH=$PC_PATH
 export PKG_CONFIG_LIBDIR=$PC_PATH
 PKG_CFLAGS=$($PKG_CONFIG --cflags ${PKG_CONFIG_NAME})
