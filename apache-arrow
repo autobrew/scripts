@@ -22,7 +22,7 @@ $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warnin
 
 # Hardcode this for my custom autobrew build
 rm -f $BREWDIR/lib/*.dylib
-PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -lthrift -llz4 -lboost_system -lboost_filesystem -lboost_regex -lsnappy"
+PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -lthrift -llz4 -lsnappy"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
