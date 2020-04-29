@@ -36,4 +36,6 @@ done
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
 
-rm -f tests/testthat.R
+if [ "${R_VERSION:0:1}" = "3" ]; then
+  rm -f tests/testthat.R
+fi
