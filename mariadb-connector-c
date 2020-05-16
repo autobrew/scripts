@@ -27,6 +27,7 @@ rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
 # Note openssl libdir has changed to openssl@1.1
 PKG_LIBS_STATIC="-lmariadbclient -lssl -lcrypto -lz"
+PKG_LIBS_STATIC="${PKG_LIBS_STATIC} $(krb5-config --libs)"
 PKG_LIBS="-L$BREWDIR/opt/{openssl@1.1/lib,mariadb-connector-c/lib/mariadb} $PKG_LIBS_STATIC"
 PKG_CFLAGS="-I$BREWDIR/opt/mariadb-connector-c/include/mariadb"
 
