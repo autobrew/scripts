@@ -32,3 +32,7 @@ script:
   - chmod 500 fakehome
   - HOME="$PWD/fakehome" Rscript testcran.R
 
+before_cache:
+  - curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/install.sh
+  - chmod +x install.sh
+  - echo | ./install.sh
