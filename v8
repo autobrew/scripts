@@ -25,10 +25,7 @@ rm -f $BREWDIR/opt/*/lib/*.dylib
 # Needed for eg mariadb-connector-c
 rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
-# Test
-if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS=$PKG_LIBS_STATIC
-fi
+PKG_LIBS="-lv8_{base_without_compiler,compiler,libplatform,snapshot,libbase,libsampler,initializers,init} -ltorque_{base,generated_definitions,generated_initializers} -lchrome_zlib -lcompression_utils_portable"
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
