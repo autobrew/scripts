@@ -27,6 +27,9 @@ rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
 PKG_LIBS="-lv8_{base_without_compiler,compiler,libplatform,snapshot,libbase,libsampler,initializers,init} -ltorque_{base,generated_definitions,generated_initializers} -lchrome_zlib -lcompression_utils_portable"
 
+# Need to expand braces for the pointer compression feature test in configure script
+PKG_LIBS=$(eval echo $PKG_LIBS)
+
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
 
