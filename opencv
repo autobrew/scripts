@@ -8,7 +8,7 @@ PKG_CONFIG_NAME="opencv"
 UPSTREAM_ORG="autobrew"
 
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW=${TMPDIR-/tmp}
+AUTOBREW="${PWD}/src/autobrew"
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
@@ -51,3 +51,8 @@ PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
 mkdir -p inst/share
 cp -r $BREWDIR/opt/opencv/share/OpenCV/haarcascades inst/share/
 cp -r $BREWDIR/opt/opencv/share/OpenCV/lbpcascades inst/share/
+
+# Cleanup detritus
+rm -Rf $BREWDIR/Library
+echo "rm -Rf $AUTOBREW" >> cleanup
+chmod +x cleanup

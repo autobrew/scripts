@@ -6,7 +6,7 @@ UPSTREAM_ORG="autobrew"
 
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 export HOMEBREW_NO_ANALYTICS=1
-AUTOBREW=${TMPDIR-/tmp}
+AUTOBREW="${PWD}/src/autobrew"
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
@@ -52,3 +52,8 @@ for FILE in $BREWDIR/lib/*.a; do
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
 rm -f $BREWDIR/lib/*.dylib
+
+# Cleanup detritus
+rm -Rf $BREWDIR/Library
+echo "rm -Rf $AUTOBREW" >> cleanup
+chmod +x cleanup
