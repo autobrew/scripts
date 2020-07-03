@@ -37,6 +37,9 @@ unset HOMEBREW_NO_AUTO_UPDATE
 if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
 echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
 echo "#include <stdio.h>" > $PKG_TEST_FILE
+
+# Workaround for s2 package
+sed -i.bak 's@PKG_CXXFLAGS = @PKG_CXXFLAGS = -isysroot / @g' src/Makevars.in
 fi
 
 # Cleanup detritus
