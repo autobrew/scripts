@@ -40,6 +40,9 @@ echo "#include <stdio.h>" > $PKG_TEST_FILE
 
 # Workaround for s2 package
 sed -i.bak 's@PKG_CXXFLAGS = @PKG_CXXFLAGS = -isysroot / @g' src/Makevars.in
+else
+# Workaround for CRAN again
+echo "#include <openssl/opensslv.h>" > tools/version.c
 fi
 
 # Cleanup detritus
