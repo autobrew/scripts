@@ -5,7 +5,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 UPSTREAM_ORG="autobrew"
 
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="${PWD}/.autobrew"
+AUTOBREW="$(dirname `pwd`)/.autobrew"
 export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
 BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
 BREW="$BREWDIR/bin/brew"
