@@ -56,10 +56,12 @@ done
 rm -f $BREWDIR/lib/*.dylib
 
 # Copy configuration files
-mkdir -p inst/etc
-cp -rf /opt/X11/lib/X11/fontconfig inst/etc/ || exit 0
-sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
-rm -f inst/etc/fontconfig/*.bak
+if [ -d "/opt/X11/lib/X11/fontconfig" ]; then
+	mkdir -p inst/etc
+	cp -rf /opt/X11/lib/X11/fontconfig inst/etc/
+	sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
+	rm -f inst/etc/fontconfig/*.bak
+fi
 
 # Cleanup detritus
 rm -Rf $BREWDIR/Library
