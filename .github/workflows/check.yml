@@ -1,0 +1,27 @@
+on: [push, pull_request]
+
+name: Check all the packages
+
+jobs:
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install R
+        run: brew cask install r gfortran
+
+      - name: Remove homebrew
+        run: |
+          curl -fsSOL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh
+          sudo /bin/bash uninstall.sh --force
+          rm uninstall.sh
+          hash -r
+
+      - name: run check script
+        run: |
+          mkdir fakehome
+          cp ~/.gitconfig fakehome/ || touch fakehome/.gitconfig
+          chmod 500 fakehome
+          HOME="$PWD/fakehome" Rscript testcran.R
