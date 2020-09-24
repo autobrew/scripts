@@ -1,8 +1,8 @@
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-# Use the OpenCV3 name
-PKG_CONFIG_NAME="opencv"
+# Use the OpenCV4 name
+PKG_CONFIG_NAME="opencv4"
 
 # Offical Homebrew no longer supports El-Capitain
 UPSTREAM_ORG="autobrew"
@@ -49,8 +49,8 @@ PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
 
 # Copy share files
 mkdir -p inst/share
-cp -r $BREWDIR/opt/opencv/share/OpenCV/haarcascades inst/share/
-cp -r $BREWDIR/opt/opencv/share/OpenCV/lbpcascades inst/share/
+cp -r $BREWDIR/opt/opencv/share/opencv4/haarcascades inst/share/
+cp -r $BREWDIR/opt/opencv/share/opencv4/lbpcascades inst/share/
 
 # Cleanup detritus
 rm -Rf $BREWDIR/Library
