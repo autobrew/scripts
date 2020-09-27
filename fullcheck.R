@@ -12,8 +12,11 @@ print(pkgs)
 skiplist <- c("rpg")
 pkgs <- setdiff(pkgs, skiplist)
 
-# Install binary packages + dependencies
-install.packages(pkgs, depends = TRUE, type = "binary")
+# Install all packages + dependencies 
+# Note depends=TRUE omits LinkingTo for binary packages
+deps <- tools::package_dependencies(pkgs, which = c("Depends", "Imports", "LinkingTo", "Suggests"))
+pkgdeps <- sort(unique(unlist(deps, use.names = FALSE)))
+install.packages(pkgdeps, type = "binary")
 
 # Check all the packages
 dir.create(pkgdir <- tempfile())
