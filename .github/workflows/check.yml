@@ -25,3 +25,5 @@ jobs:
           cp ~/.gitconfig fakehome/ || touch fakehome/.gitconfig
           chmod 500 fakehome
           HOME="$PWD/fakehome" Rscript fullcheck.R
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

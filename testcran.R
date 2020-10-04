@@ -2,7 +2,7 @@
 # You can set a GITHUB_PAT in travis settings
 options(repos = 'https://cloud.r-project.org')
 install.packages("gh")
-res <- gh::gh('/search/code?q=autobrew+in:file+filename:configure+user:cran')
+res <- gh::gh('/search/code?per_page=100&q=autobrew+in:file+filename:configure+user:cran')
 pkgs <- vapply(res$items, function(x){x$repository$name}, "")
 pkgs <- sort(unique(pkgs))
 print(pkgs)
