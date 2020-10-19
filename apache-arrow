@@ -24,6 +24,7 @@ $BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warnin
 rm -f $BREWDIR/lib/*.dylib
 AWS_LIBS="-laws-cpp-sdk-config -laws-cpp-sdk-transfer -laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common -lpthread -lcurl"
 PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS"
+PKG_CFLAGS="-I$BREWDIR/include"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
