@@ -4,8 +4,13 @@ name: Check all the packages
 
 jobs:
   macos:
-    name: MacOS
-    runs-on: macos-latest
+
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'macos-10.15', 'macos-11.0']
     steps:
       - uses: actions/checkout@v2
 
@@ -24,6 +29,6 @@ jobs:
           mkdir fakehome
           cp ~/.gitconfig fakehome/ || touch fakehome/.gitconfig
           chmod 500 fakehome
-          HOME="$PWD/fakehome" Rscript fullcheck.R
+          HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript fullcheck.R
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
