@@ -19,4 +19,4 @@ fi
 
 # Run the online installation bootstrapper
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y $RUSTUP_ARGS
-sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars
+test -f src/Makevars.in && sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars
