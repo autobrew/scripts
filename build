@@ -1,3 +1,7 @@
+if [ $(arch | grep arm) ]; then
+echo "ARM64 is not yet supported"
+else
+
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -35,3 +39,6 @@ fi
 rm -Rf $BREWDIR/Library
 echo "rm -Rf $AUTOBREW" >> cleanup
 chmod +x cleanup
+
+# Not ARM
+fi

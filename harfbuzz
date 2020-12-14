@@ -1,3 +1,7 @@
+if [ $(arch | grep arm) ]; then
+echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+else
+
 # Textshaper uses PKG_BREW_NAME="harfbuzz fribidi" but that doesnt work
 # We manually install fribidi below
 PKG_BREW_NAME=harfbuzz
@@ -56,3 +60,6 @@ rm -f $BREWDIR/lib/*.dylib
 rm -Rf $BREWDIR/Library
 echo "rm -Rf $AUTOBREW" >> cleanup
 chmod +x cleanup
+
+# Not ARM
+fi

@@ -1,3 +1,7 @@
+if [ $(arch | grep arm) ]; then
+echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+else
+
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -50,3 +54,6 @@ fi
 rm -Rf $BREWDIR/Library
 echo "rm -Rf $AUTOBREW" >> cleanup
 chmod +x cleanup
+
+# Not ARM
+fi
