@@ -2,6 +2,9 @@ if [ $(arch | grep arm) ]; then
 echo "Could not find '$PKG_BREW_NAME' library for `arch`"
 else
 
+# Do not use legacy 1.0.2 anymore
+PKG_BREW_NAME="openssl@1.1"
+
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -29,10 +32,9 @@ rm -f $BREWDIR/opt/*/lib/*.dylib
 # Needed for eg mariadb-connector-c
 rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
-# Test
-if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS=$PKG_LIBS_STATIC
-fi
+# Export cflags/libs
+PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
+PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib -lssl -lcrypto"
 
 unset HOMEBREW_NO_ANALYTICS
 unset HOMEBREW_NO_AUTO_UPDATE
