@@ -1,5 +1,13 @@
 # CRAN builder doesn't allow writing in $HOME so we build from TMPDIR
 # https://github.com/rust-lang/rustup.rs#environment-variables
+
+# Currently ARM needs nightly rust
+# See https://github.com/rust-lang/rustup/issues/2413#issuecomment-733998798
+# Remove this when rust 1.49 is released
+if [ $(arch | grep arm) ]; then
+EXTRA_RUSTUP_ARGS="--default-toolchain beta"
+fi
+
 DEFAULT_HOME="${HOME}/.cargo"
 
 # Test if DEFAULT_HOME is writable
@@ -18,5 +26,5 @@ RUSTUP_ARGS="--no-modify-path"
 fi
 
 # Run the online installation bootstrapper
-curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y $RUSTUP_ARGS
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y $RUSTUP_ARGS $EXTRA_RUSTUP_ARGS
 test -f src/Makevars.in && sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars

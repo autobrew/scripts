@@ -1,5 +1,6 @@
 if [ $(arch | grep arm) ]; then
 echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+exit 1
 else
 
 export HOMEBREW_NO_ANALYTICS=1
