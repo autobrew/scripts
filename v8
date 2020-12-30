@@ -1,9 +1,10 @@
+# Note: the V8 package looks in a weird place under BREWDIR/opt/v8
 if [ $(arch | grep arm) ]; then
-mkdir -p src/opt/v8
-curl -sSOL http://jeroen.github.io/V8/v8-8.7.220.29.arm64_big_sur.bottle.1.tar.gz
-tar xzf v8-8.7.220.29.arm64_big_sur.bottle.1.tar.gz -C src/opt/v8 --strip-components 2
-rm -f v8-8.7.220.29.arm64_big_sur.bottle.1.tar.gz
-BREWDIR="$PWD/src"
+BREWDIR="$PWD/src/autobrew"
+mkdir -p $BREWDIR/opt/v8
+curl -sSL http://dl.bintray.com/autobrew/arm64_big_sur/v8-static-8.7.220.29-arm64_big_sur.tar.xz -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR/opt/v8 && rm -f libs.tar.xz
+ln -s $BREWDIR/opt/v8/lib $BREWDIR/opt/v8/libexec
 PKG_LIBS="-lv8"
 else
 
