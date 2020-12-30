@@ -1,6 +1,6 @@
 # Note: the V8 package looks in a weird place under BREWDIR/opt/v8
 if [ $(arch | grep arm) ]; then
-BREWDIR="$PWD/src/autobrew"
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR/opt/v8
 curl -sSL http://dl.bintray.com/autobrew/arm64_big_sur/v8-static-8.7.220.29-arm64_big_sur.tar.xz -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR/opt/v8 && rm -f libs.tar.xz
