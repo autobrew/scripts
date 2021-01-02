@@ -1,8 +1,18 @@
+# Find a bottle
 if [ $(arch | grep arm) ]; then
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/openssl-1.1.1i-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/openssl-1.1.1i-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/openssl-1.1.1g-high_sierra.tar.xz"
+else
+bottle="http://dl.bintray.com/autobrew/el_capitan/openssl-1.1.1g-el_capitan.tar.xz"
+fi
 
+# General setup
 BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-curl -sSL http://dl.bintray.com/autobrew/arm64_big_sur/openssl-1.1.1i-arm64_big_sur.tar.xz -o libs.tar.xz
+curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include"
 PKG_LIBS="-L${BREWDIR}/lib -lssl -lcrypto"
@@ -10,63 +20,3 @@ PKG_LIBS="-L${BREWDIR}/lib -lssl -lcrypto"
 # openssl pkg looks under /opt for include
 mkdir -p $BREWDIR/opt/openssl
 ln -s $BREWDIR/include $BREWDIR/opt/openssl/include
-
-else
-
-# Do not use legacy 1.0.2 anymore
-PKG_BREW_NAME="openssl@1.1"
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
-mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-
-# Install bottle + dependencies
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-rm -f $BREWDIR/Cellar/$PKG_BREW_NAME/*/lib/*.dylib
-rm -f $BREWDIR/opt/*/lib/*.dylib
-
-# Needed for eg mariadb-connector-c
-rm -f $BREWDIR/opt/*/lib/*/*.dylib
-
-# Export cflags/libs
-PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
-PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib -lssl -lcrypto"
-
-unset HOMEBREW_NO_ANALYTICS
-unset HOMEBREW_NO_AUTO_UPDATE
-
-# Seems to be needed on CRAN ??
-if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
-echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
-echo "#include <stdio.h>" > $PKG_TEST_FILE
-
-# Workaround for s2 package
-sed -i.bak 's@PKG_CXXFLAGS = @PKG_CXXFLAGS = -isysroot / @g' src/Makevars.in
-
-# Workaround for IPv6 problems on CRAN
-rm -f tests/testthat/test_google.R
-sed -i.bak 's/cloud/cran/g' man/certificates.Rd && rm man/*.bak
-fi
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
-fi
