@@ -1,65 +1,22 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/apache-arrow-static-2.0.0-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/apache-arrow-static-2.0.0-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/apache-arrow-2.0.0-high_sierra.tar.xz"
+else
+bottle="http://dl.bintray.com/autobrew/el_capitan/apache-arrow-2.0.0-el_capitan.tar.xz"
+fi
 
+# General setup
 BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-curl -sSL http://dl.bintray.com/autobrew/arm64_big_sur/apache-arrow-static-2.0.0-arm64_big_sur.tar.xz -o libs.tar.xz
-tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
 # Hardcoded flags
 AWS_LIBS="-laws-cpp-sdk-config -laws-cpp-sdk-transfer -laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common -lpthread -lcurl"
 PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS"
 PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
-
-else
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
-mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-
-# Install bottle + dependencies
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-
-# Hardcode this for my custom autobrew build
-rm -f $BREWDIR/lib/*.dylib
-AWS_LIBS="-laws-cpp-sdk-config -laws-cpp-sdk-transfer -laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common -lpthread -lcurl"
-PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS"
-PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
-
-# Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
-  BASENAME=`basename $FILE`
-  LIBNAME=`echo "${BASENAME%.*}" | cut -c4-`
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
-  PKG_LIBS=`echo $PKG_LIBS | sed "s/-l$LIBNAME/-lbrew$LIBNAME/g"`
-done
-
-unset HOMEBREW_NO_ANALYTICS
-unset HOMEBREW_NO_AUTO_UPDATE
-
-if [ "${R_VERSION:0:1}" = "3" ]; then
-  rm -f tests/testthat.R
-fi
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
-fi
