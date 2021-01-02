@@ -1,60 +1,33 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/ffmpeg-lite-4.3.1-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/ffmpeg-lite-4.3.1-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/ffmpeg-4.2.4-high_sierra.tar.xz"
 else
+bottle="https://dl.bintray.com/autobrew/el_capitan/ffmpeg-4.2.4-el_capitan.tar.xz"
+fi
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-export HOMEBREW_NO_ANALYTICS=1
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
+# General setup
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
-# Do not build pkg-config from source, so need to override hardcoded paths
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
-PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
+# av pkg looks under /opt/ffmpeg for include
+mkdir -p $BREWDIR/opt/ffmpeg
+ln -s $BREWDIR/include $BREWDIR/opt/ffmpeg/include
 
-# Install deps + pkg
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-$BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-
-# Set proper flags
-export PKG_CONFIG_PATH=$PC_PATH
-export PKG_CONFIG_LIBDIR=$PC_PATH
-PKG_CFLAGS=$($PKG_CONFIG --cflags $PKG_CONFIG_NAME)
-PKG_CFLAGS="$PKG_CFLAGS -DBUILD_AUTOBREW"
-PKG_LIBS=$($PKG_CONFIG --libs-only-l --static $PKG_CONFIG_NAME vorbis)
-PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS -framework AVFoundation"
-rm -f $BREWDIR/lib/*.dylib
-rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+# pkg-config --libs-only-l --static libavfilter vorbis
+PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample -lavresample -lavutil -lvorbis -logg -liconv -lz -lm -framework AVFoundation"
+PKG_CFLAGS="-I$BREWDIR/include -DBUILD_AUTOBREW"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
+for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
-fi
