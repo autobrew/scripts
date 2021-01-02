@@ -20,3 +20,16 @@ PKG_LIBS="-L${BREWDIR}/lib -lssl -lcrypto"
 # openssl pkg looks under /opt for include
 mkdir -p $BREWDIR/opt/openssl
 ln -s $BREWDIR/include $BREWDIR/opt/openssl/include
+
+# Some old workarounds for MacOS 10.11
+if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
+echo "PKG_CFLAGS=-isysroot /" >> src/Makevars.in
+echo "#include <stdio.h>" > $PKG_TEST_FILE
+
+# Workaround for s2 package
+sed -i.bak 's@PKG_CXXFLAGS = @PKG_CXXFLAGS = -isysroot / @g' src/Makevars.in
+
+# Workaround for IPv6 problems on CRAN
+rm -f tests/testthat/test_google.R
+sed -i.bak 's/cloud/cran/g' man/certificates.Rd && rm man/*.bak
+fi
