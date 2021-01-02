@@ -1,50 +1,27 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/redland-1.0.17-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/redland-1.0.17-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/redland-1.0.17-high_sierra.tar.xz"
 else
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
-mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-
-# Do not build pkg-config from source, so need to override hardcoded paths
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
-PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
-echo "PC_PATH=$PC_PATH"
-
-$BREW deps -n $PKG_BREW_NAME
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-
-export PKG_CONFIG_PATH=$PC_PATH
-export PKG_CONFIG_LIBDIR=$PC_PATH
-PKG_CFLAGS=$($PKG_CONFIG --cflags ${PKG_CONFIG_NAME})
-PKG_LIBS=$($PKG_CONFIG --libs-only-l --static ${PKG_CONFIG_NAME})
-rm -f $BREWDIR/opt/*/lib/*.dylib
-rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
-
-# Hack for unixodbc dependency
-#sed -i.bak 's/Libs.private:/Libs.private: -lltdb/' "$BREWDIR/opt/redland/lib/pkgconfig/redland.pc"
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
+bottle="http://dl.bintray.com/autobrew/el_capitan/redland-1.0.17-el_capitan.tar.xz"
 fi
+
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Hardcoded flags
+PKG_LIBS="-L$BREWDIR/lib -lrdf -lrasqal -lraptor2 -lltdl -lcurl -lxml2 -lz -lpthread -licucore -lm -lxml2 -lxslt"
+PKG_CFLAGS="-I$BREWDIR/include -I$BREWDIR/include/raptor2 -I$BREWDIR/include/rasqal"
+
+# Workaround for redland configure script assuming pkgconfig
+PKGCONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
+mkdir -p "$(dirname $PKGCONFIG)"
+echo "if [ \"\$1\" = \"--cflags\" ]; then echo '$PKG_CFLAGS'; else echo '$PKG_LIBS'; fi" > "$PKGCONFIG"
+chmod +x "$PKGCONFIG"
