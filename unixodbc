@@ -1,43 +1,26 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/unixodbc-2.3.9-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/unixodbc-2.3.9-big_sur.tar.xz"
 else
+bottle="https://dl.bintray.com/autobrew/high_sierra/unixodbc-2.3.9-high_sierra.tar.xz"
+fi
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
+# General setup
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
-# Install bottle + dependencies
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-rm -f $BREWDIR/Cellar/$PKG_BREW_NAME/*/lib/*.dylib
-rm -f $BREWDIR/opt/*/lib/*.dylib
+# package may look for /opt/unixodbc for include
+mkdir -p $BREWDIR/opt
+ln -s $BREWDIR $BREWDIR/opt/unixodbc
 
-# Needed for eg mariadb-connector-c
-rm -f $BREWDIR/opt/*/lib/*/*.dylib
+# Hardcoded flags
+PKG_LIBS="-L$BREWDIR/lib -lodbc -lltdl"
+PKG_CFLAGS="-I$BREWDIR/include"
 
-# Test
-if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS=$PKG_LIBS_STATIC
-else
-PKG_LIBS="$PKG_LIBS -lltdl"
-fi
-
-unset HOMEBREW_NO_ANALYTICS
-unset HOMEBREW_NO_AUTO_UPDATE
-
-# Not ARM
-fi
+# Hack for broken odbc configure script
+touch "$BREWDIR/lib/nothing.dylib"
