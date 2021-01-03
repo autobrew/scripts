@@ -1,69 +1,33 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/poppler-20.12.1-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/poppler-20.12.1-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/poppler-20.12.1-high_sierra.tar.xz"
 else
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
-mkdir -p $BREWDIR
-echo "Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-
-# Do not build pkg-config from source, so need to override hardcoded paths
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
-PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
-
-# Install binary builds
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME  2>&1 | perl -pe 's/Warning/Note/gi'
-
-# Need to rebuild fontconfig on Mavericks
-if [ $(sw_vers -productVersion | grep -F "10.9") ]; then
-  $BREW reinstall fontconfig --build-bottle 2>&1 | perl -pe 's/Warning/Note/gi'
-  $BREW install zlib
-  $BREW link --force zlib
+bottle="http://dl.bintray.com/autobrew/el_capitan/poppler-20.12.1-el_capitan.tar.xz"
 fi
 
-# Set flags manually (poppler.pc is broken for static)
-export PKG_CONFIG_PATH=$PC_PATH
-export PKG_CONFIG_LIBDIR=$PC_PATH
-PKG_CFLAGS=$($PKG_CONFIG --cflags $PKG_CONFIG_NAME)
-PKG_LIBS=$($PKG_CONFIG --libs --static ${PKG_CONFIG_NAME} cairo lcms2 libopenjp2 libtiff-4)
-PKG_LIBS="-L${BREWDIR}/lib ${PKG_LIBS}"
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Hardcoded flags
+PKG_CFLAGS="-DBUNDLE_POPPLER_DATA -I${BREWDIR}/include/poppler/cpp -I${BREWDIR}/include/poppler"
+PKG_LIBS="-L${BREWDIR}/lib -lpoppler-cpp -lpoppler -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -llzo2 -llcms2 -lopenjp2 -ltiff -ljpeg -lz -lm -lpthread"
+
+# Ship poppler training data
+mkdir -p inst/share
+cp -Rf $BREWDIR/share/poppler inst/share/
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/Cellar/*/*/lib/*.a; do
-  BASENAME=`basename $FILE`
-  LIBNAME=`echo "${BASENAME%.*}" | cut -c4-`
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
-  PKG_LIBS=`echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g"`
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
-rm -f $BREWDIR/lib/*.dylib
-rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
-
-# Copy data files
-mkdir -p inst/share
-cp -r $BREWDIR/share/poppler inst/share/
-PKG_CFLAGS="$PKG_CFLAGS -DBUNDLE_POPPLER_DATA"
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
-fi
