@@ -1,1 +1,36 @@
-default
+# Find a bundle
+if [ $(arch | grep arm) ]; then
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/ragg-2.10.4-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/ragg-2.10.4-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/ragg-2.9.1-high_sierra.tar.xz"
+else
+bottle="http://dl.bintray.com/autobrew/el_capitan/ragg-2.9.1-el_capitan.tar.xz"
+fi
+
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Hardcoded flags
+PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/freetype2"
+PKG_LIBS="-L${BREWDIR}/lib -lfreetype -lbz2 -lpng16 -ltiff -ljpeg -lz"
+
+# Custom locations
+mkdir -p $BREWDIR/opt
+ln -s $BREWDIR $BREWDIR/opt/freetype
+ln -s $BREWDIR $BREWDIR/opt/libpng
+ln -s $BREWDIR $BREWDIR/opt/libtiff
+ln -s $BREWDIR $BREWDIR/opt/libjpeg
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
