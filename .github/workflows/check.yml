@@ -1,4 +1,6 @@
-on: [push, pull_request]
+on:
+#  push:
+  workflow_dispatch:
 
 name: Check all the packages
 

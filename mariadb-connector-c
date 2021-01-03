@@ -1,47 +1,18 @@
+# Find a bottle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/mariadb-connector-c-3.1.11-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/mariadb-connector-c-3.1.11-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/mariadb-connector-c-3.1.11-high_sierra.tar.xz"
 else
-
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
-mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-
-# Install bottle + dependencies
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME 2>/dev/null)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-rm -f $BREWDIR/Cellar/$PKG_BREW_NAME/*/lib/*.dylib
-rm -f $BREWDIR/opt/*/lib/*.dylib
-
-# Needed for eg mariadb-connector-c
-rm -f $BREWDIR/opt/*/lib/*/*.dylib
-
-# Note openssl libdir has changed to openssl@1.1
-PKG_LIBS_STATIC="-lmariadbclient -lssl -lcrypto -lz"
-PKG_LIBS_STATIC="${PKG_LIBS_STATIC} $(krb5-config --libs)"
-PKG_LIBS="-L$BREWDIR/opt/{openssl@1.1/lib,mariadb-connector-c/lib/mariadb} $PKG_LIBS_STATIC"
-PKG_CFLAGS="-I$BREWDIR/opt/mariadb-connector-c/include/mariadb"
-
-unset HOMEBREW_NO_ANALYTICS
-unset HOMEBREW_NO_AUTO_UPDATE
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
+bottle="http://dl.bintray.com/autobrew/el_capitan/mariadb-connector-c-3.1.11-el_capitan.tar.xz"
 fi
+
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
+PKG_CFLAGS="-I${BREWDIR}/include/mariadb"
+PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcrypto"
