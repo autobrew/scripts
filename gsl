@@ -1,1 +1,18 @@
-default
+# Find a bottle
+if [ $(arch | grep arm) ]; then
+bottle="http://dl.bintray.com/autobrew/arm64_big_sur/gsl-2.6-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="http://dl.bintray.com/autobrew/big_sur/gsl-2.6-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="http://dl.bintray.com/autobrew/high_sierra/gsl-2.5-high_sierra.tar.xz"
+else
+bottle="http://dl.bintray.com/autobrew/el_capitan/gsl-2.5-el_capitan.tar.xz"
+fi
+
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="-L${BREWDIR}/lib -lgsl -lgslcblas -lm"
