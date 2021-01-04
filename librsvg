@@ -19,6 +19,11 @@ rm -f libs.tar.xz
 # Set all the cflags
 PKG_CFLAGS="-I$BREWDIR/include/librsvg-2.0 -I$BREWDIR/include/glib-2.0 -I$BREWDIR/lib/glib-2.0/include -I$BREWDIR/include/gdk-pixbuf-2.0 -I$BREWDIR/include/cairo"
 
+# Remove this when we update gdk-pixbuf-static
+if [[ ${OSTYPE:6} -ge 20 ]]; then
+PKG_CFLAGS="$PKG_CFLAGS -DGLIB_DISABLE_DEPRECATION_WARNINGS"
+fi
+
 # pkg-config --libs-only-l --static librsvg-2.0 libpng cairo-gobject pangocairo gmodule-2.0 fribidi expat
 PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lgmodule-2.0 -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat -framework AVFoundation \$(FOUNDATION_LIBS)"
 
