@@ -1,45 +1,35 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/protobuf-3.14.0-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/protobuf-3.14.0-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/protobuf-3.12.4-high_sierra.tar.xz"
 else
+bottle="https://dl.bintray.com/autobrew/el_capitan/protobuf-3.12.4-el_capitan.tar.xz"
+fi
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
+# General setup
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
+# Export flags
+PKG_CFLAGS="-DUSENEWAPI -I$BREWDIR/include"
+PKG_LIBS="-L$BREWDIR/lib -lprotobuf"
+PATH="$BREWDIR/bin:$PATH"
 
-# 2017-03-15: there's a bug in protoc not finding dylibs
-mv $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib $BREWDIR/opt/$PKG_BREW_NAME/bin/
-export DYLD_LIBRARY_PATH="$BREWDIR/opt/$PKG_BREW_NAME/bin"
+# Many packages expect ./opt/protobuf/bin/protoc
+mkdir -p "$BREWDIR/opt"
+ln -s $BREWDIR "$BREWDIR/opt/protobuf"
 
-# Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/lib/*.a; do
-  BASENAME=$(basename $FILE)
-  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  DESTFILE="$BREWDIR/opt/$PKG_BREW_NAME/lib/libbrew$LIBNAME.a"
-  cp -f $FILE $DESTFILE && echo "created $DESTFILE"
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME/-lbrew$LIBNAME/g")
-done
+# Workaround for protolite, remove when fixec
+echo "exit 0;" > "$BREWDIR/bin/pkg-config"
+chmod +x "$BREWDIR/bin/pkg-config"
 
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
+# Workaround for cld3 which does not use CXX11STD in configure pretest
+if [ "$R_PACKAGE_NAME" = "cld3" ];then
+PKG_TEST_HEADER="<string.h>"
 fi
