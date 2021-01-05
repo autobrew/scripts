@@ -32,7 +32,7 @@ rm -f $BREWDIR/opt/*/lib/*/*.dylib
 
 # Test
 if [ "$PKG_LIBS_STATIC" ]; then
-PKG_LIBS=$PKG_LIBS_STATIC
+PKG_LIBS="-L$BREWDIR/opt/openssl@1.1/lib $PKG_LIBS_STATIC"
 fi
 
 unset HOMEBREW_NO_ANALYTICS
