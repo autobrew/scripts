@@ -1,53 +1,31 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/gpgme-1.15.0-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/gpgme-1.15.0-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/gpgme-1.15.0-high_sierra.tar.xz"
 else
+bottle="https://dl.bintray.com/autobrew/el_capitan/gpgme-1.15.0-el_capitan.tar.xz"
+fi
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
+# General setup
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
-# Calculate deps
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW deps -n $PKG_BREW_NAME
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-$BREW install --force-bottle $BREW_DEPS $PKG_BREW_NAME gnupg@1.4 2>&1 | perl -pe 's/Warning/Note/gi'
-PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
-PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
+# package may look in opt
+mkdir -p $BREWDIR/opt
+ln -s $BREWDIR $BREWDIR/opt/gpgme
+
+# Hardcoded flags
+PKG_CFLAGS="-I$BREWDIR/include"
+PKG_LIBS="-L$BREWDIR/lib -lgpgme -lassuan -lgpg-error"
 
 # Ship a standalone 'gpg'
 mkdir -p inst/bin
-cp -f $BREWDIR/opt/gnupg@1.4/bin/gpg1 inst/bin/gpg
+cp -f $BREWDIR/bin/gpg1 inst/bin/gpg
 
-# Delete shared libs
-rm -f $BREWDIR/Cellar/libassuan/*/lib/*.dylib
-rm -f $BREWDIR/Cellar/libgpg-error/*/lib/*.dylib
-
-# Rebuild standalone pinentry (nb: autobrew bottle is already standalone)
-if [ $UPSTREAM_ORG = "Homebrew" ]; then
-	$BREWDIR/bin/brew reinstall pinentry --build-from-source
-fi
-
-cp -f $BREWDIR/opt/pinentry/bin/pinentry inst/bin/pinentry
-
-# Just to be sure
-rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
-fi
+# TODO: also add: inst/bin/pinentry
