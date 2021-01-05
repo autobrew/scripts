@@ -1,1 +1,25 @@
-default
+# Find a bundle
+if [ $(arch | grep arm) ]; then
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/libssh-0.9.5-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/libssh-0.9.5-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/libssh-0.9.5-high_sierra.tar.xz"
+else
+bottle="https://dl.bintray.com/autobrew/el_capitan/libssh-0.9.5-el_capitan.tar.xz"
+fi
+
+# General setup
+BREWDIR="$PWD/.autobrew"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# package may look for /opt/libssh for include
+mkdir -p $BREWDIR/opt
+ln -s $BREWDIR $BREWDIR/opt/libssh
+
+# Hardcoded flags
+PKG_LIBS="-L$BREWDIR/lib -lssh -lcrypto"
+PKG_CFLAGS="-I$BREWDIR/include"
