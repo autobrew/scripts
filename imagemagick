@@ -1,63 +1,34 @@
+# Find a bundle
 if [ $(arch | grep arm) ]; then
-echo "Could not find '$PKG_BREW_NAME' library for `arch`"
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/imagemagick-6.9.11-55-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/imagemagick-6.9.11-55-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/imagemagick-6.9.11-32-high_sierra.tar.xz"
 else
+bottle="https://dl.bintray.com/autobrew/el_capitan/imagemagick-6.9.11-32-el_capitan.tar.xz"
+fi
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Offical Homebrew no longer supports El-Capitain
-UPSTREAM_ORG="autobrew"
-
-if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-AUTOBREW="$(dirname `pwd`)/.autobrew"
-export HOMEBREW_TEMP="$AUTOBREW/hbtmp"
-BREWDIR="$AUTOBREW/build-$PKG_BREW_NAME"
-BREW="$BREWDIR/bin/brew"
-rm -Rf $BREWDIR
+# General setup
+BREWDIR="$PWD/.autobrew"
 mkdir -p $BREWDIR
-echo "$(date): Auto-brewing $PKG_BREW_NAME in $BREWDIR..."
-curl -fsSL https://github.com/$UPSTREAM_ORG/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
+curl -SL $bottle -o libs.tar.xz --progress-bar
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
 
-# Do not build pkg-config from source, so need to override hardcoded paths
-export HOMEBREW_CACHE="$AUTOBREW"
-$BREW install --force-bottle pkg-config 2>&1 | perl -pe 's/Warning/Note/gi'
-PKG_CONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
-PC_PATH=$($PKG_CONFIG --variable pc_path pkg-config)
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local/Homebrew#${BREWDIR}#gi") #HOMEBREW_LIBRARY
-PC_PATH=$(echo $PC_PATH | perl -pe "s#/usr/local#${BREWDIR}#gi") #HOMEBREW_PREFIX
+# Set all the cflags
+PKG_CFLAGS="-DBUILD_AUTOBREW -DMAGICKCORE_HDRI_ENABLE=0 -DMAGICKCORE_QUANTUM_DEPTH=16 -I$BREWDIR/include/ImageMagick-6"
 
-# Disable fontconfig post install caching stuff
-$BREW install --force-bottle freetype 2>&1 | perl -pe 's/Warning/Note/gi'
-sed -i.bak '/fc-cache/d' "$BREWDIR/Library/Taps/${UPSTREAM_ORG}/homebrew-core/Formula/fontconfig.rb"
-
-# Use old IM for now
-PKG_BREW_NAME="imagemagick@6"
-
-# Install dependencies
-$BREW deps -n $PKG_BREW_NAME 2>/dev/null
-BREW_DEPS=$($BREW deps -n $PKG_BREW_NAME)
-$BREW install --force-bottle $BREW_DEPS 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW install --force-bottle $PKG_BREW_NAME 2>&1 | perl -pe 's/Warning/Note/gi'
-$BREW link --force $PKG_BREW_NAME gettext
-
-# Get the CFLAGS and LIBS
-export PKG_CONFIG_PATH=$PC_PATH
-export PKG_CONFIG_LIBDIR=$PC_PATH
-PKG_CFLAGS=$($PKG_CONFIG --cflags $PKG_CONFIG_NAME)
-PKG_CFLAGS="$PKG_CFLAGS -DBUILD_AUTOBREW"
-PKG_LIBS=$($PKG_CONFIG --libs-only-l --static $PKG_CONFIG_NAME libpng cairo-gobject pangocairo gmodule-2.0 fribidi)
-PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS -lexpat \$(FOUNDATION_LIBS)" #pkg-config misses a few paths
-rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+# Set the libs
+PKG_LIBS="-L$BREWDIR/lib -lMagick++-6.Q16 -lMagickWand-6.Q16 -lMagickCore-6.Q16 -llcms2 -lwebpmux -lwebpdemux -lwebp -llzma -lbz2 -lopenjp2 -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lgmodule-2.0 -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lltdl -lexpat -framework AVFoundation \$(FOUNDATION_LIBS)"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  echo "created $BREWDIR/lib/libbrew$LIBNAME.a"
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
-rm -f $BREWDIR/lib/*.dylib
 
 # Copy configuration files
 if [ -d "/opt/X11/lib/X11/fontconfig" ]; then
@@ -65,12 +36,4 @@ if [ -d "/opt/X11/lib/X11/fontconfig" ]; then
 	cp -rf /opt/X11/lib/X11/fontconfig inst/etc/
 	sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
 	rm -f inst/etc/fontconfig/*.bak
-fi
-
-# Cleanup detritus
-rm -Rf $BREWDIR/Library
-echo "rm -Rf $AUTOBREW" >> cleanup
-chmod +x cleanup
-
-# Not ARM
 fi
