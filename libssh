@@ -20,8 +20,9 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
 # package may look for /opt/libssh for include
-mkdir -p $BREWDIR/opt
-ln -s $BREWDIR $BREWDIR/opt/libssh
+mkdir -p $BREWDIR/opt/libssh
+ln -s $BREWDIR/include $BREWDIR/opt/libssh/include
+ln -s $BREWDIR/lib $BREWDIR/opt/libssh/lib
 
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lssh -lcrypto"
