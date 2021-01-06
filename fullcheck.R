@@ -21,7 +21,7 @@ install.packages(pkgdeps, type = "binary")
 # Check all the packages
 dir.create(pkgdir <- tempfile())
 download.packages(pkgs, pkgdir)
-tools::check_packages_in_dir(pkgdir, Ncpus = 1, check_args = '--no-manual --no-build-vignettes')
+tools::check_packages_in_dir(pkgdir, check_args = '--no-manual --no-build-vignettes')
 
 # Get outputs
 df <- tools::check_packages_in_dir_details(pkgdir)
