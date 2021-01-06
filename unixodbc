@@ -29,3 +29,7 @@ PKG_CFLAGS="-I$BREWDIR/include"
 
 # Hack for broken odbc configure script
 touch "$BREWDIR/lib/nothing.dylib"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
