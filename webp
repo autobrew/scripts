@@ -19,9 +19,9 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# package may look for /opt/webp for include
-mkdir -p $BREWDIR/opt
-ln -s $BREWDIR $BREWDIR/opt/webp
+# package may look for /opt
+mkdir -p $BREWDIR/opt/webp
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/webp/
 
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lwebp"

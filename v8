@@ -5,7 +5,6 @@ else
 curl -sSL http://dl.bintray.com/autobrew/catalina/v8-8.7.220.29-catalina.tar.xz -o libs.tar.xz
 fi
 
-
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 

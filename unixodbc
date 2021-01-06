@@ -19,9 +19,9 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# package may look for /opt/unixodbc for include
-mkdir -p $BREWDIR/opt
-ln -s $BREWDIR $BREWDIR/opt/unixodbc
+# package may look under /opt
+mkdir -p $BREWDIR/opt/unixodbc
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/unixodbc/
 
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lodbc -lltdl"

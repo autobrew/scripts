@@ -19,9 +19,9 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# package may in opt
-mkdir -p $BREWDIR/opt
-ln -s $BREWDIR $BREWDIR/opt/libpq
+# package may look under /opt
+mkdir -p $BREWDIR/opt/libpq
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libpq/
 
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"

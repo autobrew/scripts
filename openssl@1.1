@@ -20,9 +20,9 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include"
 PKG_LIBS="-L${BREWDIR}/lib -lssl -lcrypto"
 
-# openssl pkg looks under /opt for include
+# package may look under /opt
 mkdir -p $BREWDIR/opt/openssl
-ln -s $BREWDIR/include $BREWDIR/opt/openssl/include
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/openssl/
 
 # Some old workarounds for MacOS 10.11
 if [ $(sw_vers -productVersion | grep -F "10.11") ]; then

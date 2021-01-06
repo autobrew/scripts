@@ -25,8 +25,8 @@ PKG_LIBS="-L$BREWDIR/lib -lprotobuf"
 PATH="$BREWDIR/bin:$PATH"
 
 # Many packages expect ./opt/protobuf/bin/protoc
-mkdir -p "$BREWDIR/opt"
-ln -s $BREWDIR "$BREWDIR/opt/protobuf"
+mkdir -p $BREWDIR/opt/protobuf
+ln -s $BREWDIR/{include,lib,bin} $BREWDIR/opt/protobuf/
 
 # Workaround for protolite, remove when fixec
 echo "exit 0;" > "$BREWDIR/bin/pkg-config"
