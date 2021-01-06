@@ -28,6 +28,9 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/postgresql/
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lpq -lpgport -lpgcommon -lssl -lcrypto -lldap"
 
+# Try to fix _GSS_ linking error for 'rpg' package
+PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
+
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
