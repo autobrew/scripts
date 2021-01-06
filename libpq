@@ -20,8 +20,9 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
 # package may look under /opt
-mkdir -p $BREWDIR/opt/libpq
+mkdir -p $BREWDIR/opt/{libpq,postgresql}
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libpq/
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/postgresql/
 
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
