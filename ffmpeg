@@ -19,9 +19,9 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# av pkg looks under /opt/ffmpeg for include
+# package may look under /opt
 mkdir -p $BREWDIR/opt/ffmpeg
-ln -s $BREWDIR/include $BREWDIR/opt/ffmpeg/include
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/ffmpeg/
 
 # pkg-config --libs-only-l --static libavfilter vorbis
 PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample -lavresample -lavutil -lvorbis -logg -liconv -lz -lm -framework AVFoundation"

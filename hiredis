@@ -19,9 +19,9 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# package may in opt
-mkdir -p $BREWDIR/opt
-ln -s $BREWDIR $BREWDIR/opt/hiredis
+# package may look under /opt
+mkdir -p $BREWDIR/opt/hiredis
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/hiredis/
 
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include/hiredis -D_FILE_OFFSET_BITS=64"
