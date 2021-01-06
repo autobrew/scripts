@@ -37,3 +37,7 @@ sed -i.bak 's@PKG_CXXFLAGS = @PKG_CXXFLAGS = -isysroot / @g' src/Makevars.in
 rm -f tests/testthat/test_google.R
 sed -i.bak 's/cloud/cran/g' man/certificates.Rd && rm man/*.bak
 fi
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

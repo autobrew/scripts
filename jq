@@ -26,3 +26,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/jq/
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -ljq -lonig"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

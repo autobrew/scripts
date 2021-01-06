@@ -23,3 +23,7 @@ rm -f libs.tar.xz
 AWS_LIBS="-laws-cpp-sdk-config -laws-cpp-sdk-transfer -laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common -lpthread -lcurl"
 PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS"
 PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

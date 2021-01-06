@@ -40,3 +40,7 @@ if [ -d "/opt/X11/lib/X11/fontconfig" ]; then
 	sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
 	rm -f inst/etc/fontconfig/*.bak
 fi
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

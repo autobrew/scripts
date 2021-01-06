@@ -23,7 +23,10 @@ rm -f libs.tar.xz
 mkdir -p $BREWDIR/opt/libsodium
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libsodium/
 
-
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lsodium -pthread"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

@@ -14,3 +14,7 @@ mkdir -p $BREWDIR/opt/v8
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR/opt/v8 && rm -f libs.tar.xz
 ln -s $BREWDIR/opt/v8/lib $BREWDIR/opt/v8/libexec
 PKG_LIBS="-lv8"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

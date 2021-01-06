@@ -39,3 +39,6 @@ for FILE in $BREWDIR/lib/*.a; do
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
 
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

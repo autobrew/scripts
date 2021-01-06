@@ -28,3 +28,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/zeromq/
 # pkg-config --libs-only-l --static libzmq
 PKG_LIBS="-L$BREWDIR/lib -lzmq $EXTRALIBS"
 PKG_CFLAGS="-I$BREWDIR/include"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

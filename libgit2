@@ -22,3 +22,7 @@ rm -f libs.tar.xz
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
 PKG_LIBS="-L${BREWDIR}/lib -lgit2 -lssh2 -lcrypto -lcurl"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

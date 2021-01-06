@@ -26,3 +26,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/hiredis/
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include/hiredis -D_FILE_OFFSET_BITS=64"
 PKG_LIBS="-L$BREWDIR/lib -lhiredis"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

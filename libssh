@@ -29,3 +29,7 @@ PKG_CFLAGS="-I$BREWDIR/include"
 
 # Try to fix _GSS_ linking error in CMD check
 PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

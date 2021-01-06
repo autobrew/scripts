@@ -26,3 +26,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libpq/
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lpq -lpgport -lpgcommon -lssl -lcrypto -lldap"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

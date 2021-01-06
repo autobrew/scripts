@@ -26,3 +26,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/webp/
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lwebp"
 PKG_CFLAGS="-I$BREWDIR/include"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

@@ -28,3 +28,7 @@ PKGCONFIG="$BREWDIR/opt/pkg-config/bin/pkg-config"
 mkdir -p "$(dirname $PKGCONFIG)"
 echo "if [ \"\$1\" = \"--cflags\" ]; then echo '$PKG_CFLAGS'; else echo '$PKG_LIBS'; fi" > "$PKGCONFIG"
 chmod +x "$PKGCONFIG"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup

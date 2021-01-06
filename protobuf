@@ -36,3 +36,7 @@ chmod +x "$BREWDIR/bin/pkg-config"
 if [ "$R_PACKAGE_NAME" = "cld3" ];then
 PKG_TEST_HEADER="<string.h>"
 fi
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
