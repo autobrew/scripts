@@ -24,7 +24,7 @@ download.packages(pkgs, pkgdir)
 tools::check_packages_in_dir(pkgdir, check_args = '--no-manual --no-build-vignettes')
 
 # Get outputs
-df <- tools::check_packages_in_dir_details(pkgdir)
+df <- tools::check_packages_in_dir_details(pkgdir, Ncpus = 1)
 failures <- df$Status %in% c("WARNING", "ERROR")
 if(any(failures)){
   cat("\n\n=======\n\n")
