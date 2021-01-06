@@ -8,8 +8,8 @@ pkgs <- sort(unique(pkgs))
 print(pkgs)
 
 # Broken packages that are not mine
-skiplist <- c("rpg")
-pkgs <- setdiff(pkgs, skiplist)
+#skiplist <- c("rpg")
+#pkgs <- setdiff(pkgs, skiplist)
 
 # Install binary packages + dependencies
 install.packages(pkgs, type = "binary")

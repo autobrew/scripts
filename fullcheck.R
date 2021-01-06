@@ -9,8 +9,8 @@ pkgs <- sort(unique(pkgs))
 print(pkgs)
 
 # Broken packages that are not mine
-skiplist <- c("rpg")
-pkgs <- setdiff(pkgs, skiplist)
+#skiplist <- c("rpg")
+#pkgs <- setdiff(pkgs, skiplist)
 
 # Install all packages + dependencies 
 # Note depends=TRUE omits LinkingTo for binary packages
