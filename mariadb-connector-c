@@ -19,3 +19,6 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include/mariadb"
 PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcrypto"
+
+# Fix _GSS_ linking error in CMD check
+PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
