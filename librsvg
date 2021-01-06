@@ -28,12 +28,12 @@ PKG_CFLAGS="$PKG_CFLAGS -DGLIB_DISABLE_DEPRECATION_WARNINGS"
 fi
 
 # pkg-config --libs-only-l --static librsvg-2.0 libpng cairo-gobject pangocairo gmodule-2.0 fribidi expat
-PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lgmodule-2.0 -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat -framework AVFoundation \$(FOUNDATION_LIBS)"
+PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lgmodule-2.0 -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat -framework AVFoundation -framework AppKit \$(FOUNDATION_LIBS)"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  mv $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
