@@ -1,0 +1,32 @@
+# Find a bundle
+if [ $(arch | grep arm) ]; then
+bottle="https://dl.bintray.com/autobrew/arm64_big_sur/libarchive-3.5.1-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 20 ]]; then
+bottle="https://dl.bintray.com/autobrew/big_sur/libarchive-3.5.1-big_sur.tar.xz"
+elif [[ ${OSTYPE:6} -ge 17 ]]; then
+bottle="https://dl.bintray.com/autobrew/high_sierra/libarchive-3.5.1-high_sierra.tar.xz"
+else
+bottle="https://dl.bintray.com/autobrew/el_capitan/libarchive-3.5.1-el_capitan.tar.xz"
+fi
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# package may look for /opt
+mkdir -p $BREWDIR/opt/larchive
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/larchive/
+
+# Hardcoded flags
+PKG_LIBS="-L$BREWDIR/lib -larchive -lexpat -llzma -lzstd -llz4 -lb2 -lbz2 -lz"
+PKG_CFLAGS="-I$BREWDIR/include"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
