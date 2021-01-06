@@ -21,8 +21,9 @@ PKG_CFLAGS="-I${BREWDIR}/include"
 PKG_LIBS="-L${BREWDIR}/lib -lssl -lcrypto"
 
 # package may look under /opt
-mkdir -p $BREWDIR/opt/openssl
+mkdir -p $BREWDIR/opt/{openssl,openssl@1.1}
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/openssl/
+ln -s $BREWDIR/{include,lib} $BREWDIR/opt/openssl@1.1/
 
 # Some old workarounds for MacOS 10.11
 if [ $(sw_vers -productVersion | grep -F "10.11") ]; then
