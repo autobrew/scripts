@@ -4,7 +4,13 @@ curl -sSL http://dl.bintray.com/autobrew/arm64_big_sur/v8-8.7.220.29-arm64_big_s
 else
 curl -sSL http://dl.bintray.com/autobrew/catalina/v8-8.7.220.29-catalina.tar.xz -o libs.tar.xz
 fi
-BREWDIR="$PWD/.autobrew"
+
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
+# General setup
+BREWDIR="$PWD/.deps"
 mkdir -p $BREWDIR/opt/v8
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR/opt/v8 && rm -f libs.tar.xz
 ln -s $BREWDIR/opt/v8/lib $BREWDIR/opt/v8/libexec

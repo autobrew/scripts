@@ -9,8 +9,11 @@ else
 bottle="http://dl.bintray.com/autobrew/el_capitan/gsl-2.5-el_capitan.tar.xz"
 fi
 
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
 # General setup
-BREWDIR="$PWD/.autobrew"
+BREWDIR="$PWD/.deps"
 mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
