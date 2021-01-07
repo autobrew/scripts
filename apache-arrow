@@ -27,3 +27,8 @@ PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
+
+# Disable tests on R 3.6 due to buggy custom CRAN compiler
+if [ "${R_VERSION:0:1}" = "3" ]; then
+  rm -f tests/testthat.R
+fi
