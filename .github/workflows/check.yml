@@ -31,7 +31,10 @@ jobs:
         run: |
           mkdir fakehome
           cp ~/.gitconfig fakehome/ || touch fakehome/.gitconfig
+          cp -Rf ~/.gnupg fakehome/ || mkdir fakehome/.gnupg
           chmod 500 fakehome
+          chmod +w fakehome/.gnupg
+          unset GITHUB_ACTIONS
           HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript fullcheck.R
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
