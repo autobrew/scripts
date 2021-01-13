@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: install R
-        run: brew cask install r gfortran
+        run: brew install --cask r gfortran
 
       - name: Remove homebrew
         run: |
