@@ -31,6 +31,14 @@ PKG_LIBS="-L$BREWDIR/lib -lpq -lpgport -lpgcommon -lssl -lcrypto -lldap"
 # Try to fix _GSS_ linking error for 'rpg' package
 PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
 
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
+
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
