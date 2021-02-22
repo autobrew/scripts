@@ -1,12 +1,12 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="http://dl.bintray.com/autobrew/arm64_big_sur/poppler-20.12.1-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/poppler-20.12.1-arm64_big_sur.tar.xz"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="http://dl.bintray.com/autobrew/big_sur/poppler-20.12.1-big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/poppler-20.12.1-big_sur.tar.xz"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="http://dl.bintray.com/autobrew/high_sierra/poppler-20.12.1-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/poppler-20.12.1-high_sierra.tar.xz"
 else
-bottle="http://dl.bintray.com/autobrew/el_capitan/poppler-20.12.1-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/poppler-20.12.1-el_capitan.tar.xz"
 fi
 
 # Skip if disabled

@@ -1,14 +1,14 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="http://dl.bintray.com/autobrew/arm64_big_sur/opencv-4.5.0-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/opencv-4.5.0-arm64_big_sur.tar.xz"
 EXTRALIBS="-ltegra_hal -llibopenjp2"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="http://dl.bintray.com/autobrew/big_sur/opencv-4.5.0-big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/opencv-4.5.0-big_sur.tar.xz"
 EXTRALIBS="-llibopenjp2"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="http://dl.bintray.com/autobrew/high_sierra/opencv-4.4.0-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/opencv-4.4.0-high_sierra.tar.xz"
 else
-bottle="http://dl.bintray.com/autobrew/el_capitan/opencv-4.4.0-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/opencv-4.4.0-el_capitan.tar.xz"
 fi
 
 # Skip if disabled

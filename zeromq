@@ -1,14 +1,14 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="https://dl.bintray.com/autobrew/arm64_big_sur/zeromq-4.3.3-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/zeromq-4.3.4-arm64_big_sur.tar.xz"
 EXTRALIBS="-lsodium"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://dl.bintray.com/autobrew/big_sur/zeromq-4.3.3-big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/zeromq-4.3.4-big_sur.tar.xz"
 EXTRALIBS="-lsodium"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://dl.bintray.com/autobrew/high_sierra/zeromq-4.2.5-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/zeromq-4.2.5-high_sierra.tar.xz"
 else
-bottle="https://dl.bintray.com/autobrew/el_capitan/zeromq-4.2.5-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/zeromq-4.2.5-el_capitan.tar.xz"
 fi
 
 # Skip if disabled

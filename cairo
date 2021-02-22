@@ -1,14 +1,14 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="https://dl.bintray.com/autobrew/arm64_big_sur/cairo-1.16.0-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/cairo-1.16.0-arm64_big_sur.tar.xz"
 EXTRALIBS="-llzo2"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://dl.bintray.com/autobrew/big_sur/cairo-1.16.0-big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/cairo-1.16.0-big_sur.tar.xz"
 EXTRALIBS="-llzo2"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://dl.bintray.com/autobrew/high_sierra/cairo-1.16.0-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/cairo-1.16.0-high_sierra.tar.xz"
 else
-bottle="https://dl.bintray.com/autobrew/el_capitan/cairo-1.16.0-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/cairo-1.16.0-el_capitan.tar.xz"
 fi
 
 # Skip if disabled

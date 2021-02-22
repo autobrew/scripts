@@ -1,8 +1,8 @@
 # Note: the V8 package looks in a weird place under BREWDIR/opt/v8
 if [ $(arch | grep arm) ]; then
-bottle="http://dl.bintray.com/autobrew/arm64_big_sur/v8-8.7.220.29-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/v8-8.7.220.29-arm64_big_sur.tar.xz"
 else
-bottle="http://dl.bintray.com/autobrew/catalina/v8-8.7.220.29-catalina.tar.xz"
+bottle="https://autobrew.github.io/archive/catalina/v8-8.7.220.29-catalina.tar.xz"
 fi
 
 # Skip if disabled
