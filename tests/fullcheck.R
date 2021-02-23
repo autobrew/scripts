@@ -12,20 +12,24 @@ print(pkgs)
 #skiplist <- c("rpg")
 #pkgs <- setdiff(pkgs, skiplist)
 
+# Check all the packages
+dir.create(pkgdir <- tempfile())
+download.packages(pkgs, pkgdir)
+
 # Extra packages (need to source setupgdal.sh first)
 if(nchar(Sys.getenv("PROJ_GDAL_DATA_COPY"))){
-  pkgs <- c(pkgs, "sf", "gdal")
+  pkgs <- c('sf', 'rgdal', pkgs)
+  download.packages(c('sf', 'rgdal'), pkgdir, repos = c("https://r-spatial.r-universe.dev", "https://r-forge.universe.dev"))
 }
 
-# Install all packages + dependencies 
+# Install all packages + dependencies
 # Note depends=TRUE omits LinkingTo for binary packages
 deps <- tools::package_dependencies(pkgs, which = c("Depends", "Imports", "LinkingTo", "Suggests"))
 pkgdeps <- sort(unique(unlist(deps, use.names = FALSE)))
 install.packages(pkgdeps, type = "binary")
 
-# Check all the packages
-dir.create(pkgdir <- tempfile())
-download.packages(pkgs, pkgdir)
+
+Sys.setenv("_R_CHECK_FORCE_SUGGESTS_"=0)
 tools::check_packages_in_dir(pkgdir, check_args = '--no-manual --no-build-vignettes')
 
 # Get outputs
