@@ -12,6 +12,11 @@ print(pkgs)
 #skiplist <- c("rpg")
 #pkgs <- setdiff(pkgs, skiplist)
 
+# Extra packages (need to source setupgdal.sh first)
+if(nchar(Sys.getenv("PROJ_GDAL_DATA_COPY"))){
+  pkgs <- c(pkgs, "sf", "gdal")
+}
+
 # Install all packages + dependencies 
 # Note depends=TRUE omits LinkingTo for binary packages
 deps <- tools::package_dependencies(pkgs, which = c("Depends", "Imports", "LinkingTo", "Suggests"))

@@ -37,6 +37,7 @@ jobs:
           chmod 500 fakehome
           chmod +w fakehome/.gnupg
           unset GITHUB_ACTIONS
-          HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript fullcheck.R
+          source tests/setupgdal.sh
+          HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript tests/fullcheck.R
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

@@ -29,4 +29,4 @@ script:
   - mkdir fakehome
   - cp ~/.gitconfig fakehome/ || touch fakehome/.gitconfig
   - chmod 500 fakehome
-  - HOME="$PWD/fakehome" Rscript testcran.R
+  - HOME="$PWD/fakehome" Rscript tests/testcran.R
