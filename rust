@@ -12,8 +12,10 @@ AUTOBREW=${TMPDIR-/tmp}
 export CARGO_HOME="${AUTOBREW}/.cargo"
 export RUSTUP_HOME="${AUTOBREW}/.rustup"
 CARGO="CARGO_HOME=${CARGO_HOME} RUSTUP_HOME=${RUSTUP_HOME} ${CARGO_HOME}/bin/cargo"
-# Temp workaround for: https://github.com/rust-lang/rustup.rs/issues/2040
-# export HOME=$AUTOBREW
+sed -i.bak "s|\$(HOME)|${AUTOBREW}|g" src/Makevars
+sed -i.bak "s|PATH=|RUSTUP_HOME=${RUSTUP_HOME} PATH=|g" src/Makevars
+echo "rm -Rf $CARGO_HOME $RUSTUP_HOME" >> cleanup
+chmod +x cleanup
 fi
 
 # Run the online installation bootstrapper
