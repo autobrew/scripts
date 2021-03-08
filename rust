@@ -1,24 +1,10 @@
 # CRAN builder doesn't allow writing in $HOME so we build from TMPDIR
-# https://github.com/rust-lang/rustup.rs#environment-variables
-DEFAULT_HOME="${HOME}/.cargo"
-
-# Test if DEFAULT_HOME is writable
-if mkdir -p ${DEFAULT_HOME}/.test; then
-echo "Using default rust and cargo settings"
-CARGO="${DEFAULT_HOME}/bin/cargo"
-else
-echo "Home is unwritable, running cargo from tempdir"
-AUTOBREW=${TMPDIR-/tmp}
-export CARGO_HOME="${AUTOBREW}/.cargo"
-export RUSTUP_HOME="${AUTOBREW}/.rustup"
-CARGO="CARGO_HOME=${CARGO_HOME} RUSTUP_HOME=${RUSTUP_HOME} ${CARGO_HOME}/bin/cargo"
-sed -i.bak "s|\$(HOME)|${AUTOBREW}|g" src/Makevars
+TMPDIR=${TMPDIR-/tmp}
+export CARGO_HOME="${TMPDIR}/.cargo"
+export RUSTUP_HOME="${TMPDIR}/.rustup"
+sed -i.bak "s|\$(HOME)|${TMPDIR}|g" src/Makevars
 sed -i.bak "s|PATH=|RUSTUP_HOME=${RUSTUP_HOME} PATH=|g" src/Makevars
 echo "rm -Rf $CARGO_HOME $RUSTUP_HOME" >> cleanup
 chmod +x cleanup
-fi
-
-# Run the online installation bootstrapper
-curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y --no-modify-path $EXTRA_RUSTUP_ARGS
-test -f src/Makevars.in && sed -e "s|@cargobin@|${CARGO}|" src/Makevars.in > src/Makevars
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y --no-modify-path 2>&1 | perl -pe 's/Warning/Note/gi'
 exit 0
