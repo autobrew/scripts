@@ -1,14 +1,14 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/imagemagick-6.9.11-57-arm64_big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/imagemagick-6.9.12-3-arm64_big_sur.tar.xz"
 EXTRALIBS="-laom"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://autobrew.github.io/archive/big_sur/imagemagick-6.9.11-57-big_sur.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/imagemagick-6.9.12-3-big_sur.tar.xz"
 EXTRALIBS="-laom"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/imagemagick-6.9.11-57-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/imagemagick-6.9.12-3-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/imagemagick-6.9.11-57-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/imagemagick-6.9.12-3-el_capitan.tar.xz"
 fi
 
 # Skip if disabled
