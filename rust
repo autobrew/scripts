@@ -6,6 +6,6 @@ sed -i.bak "s|\$(HOME)|${TMPDIR}|g" src/Makevars
 sed -i.bak "s|PATH=|RUSTUP_HOME=${RUSTUP_HOME} PATH=|g" src/Makevars
 echo "rm -Rf $CARGO_HOME $RUSTUP_HOME" >> cleanup
 chmod +x cleanup
-./cleanup
+#./cleanup
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y --no-modify-path 2>&1 | perl -pe 's/Warning/Note/gi'
 exit 0
