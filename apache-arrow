@@ -33,8 +33,10 @@ PKG_LIBS="-lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrif
 PKG_DIRS="-L$BREWDIR/lib"
 if [ "$VERSION" = "3.0.0" ] || [ "$VERSION" = "2.0.0" ]; then
   PKG_LIBS="$PKG_DIRS $PKG_LIBS"
+  PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
+else
+  PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_PARQUET -DARROW_R_WITH_DATASET -DARROW_R_WITH_S3"
 fi
-PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_S3"
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
