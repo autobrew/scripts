@@ -1,6 +1,6 @@
 # We have bundles for 2.0.0 and 3.0.0 and 4.0.0 now
-if [ "$VERSION" != "2.0.0" ] && [ "$VERSION" != "3.0.0" ]; then
-VERSION="4.0.1"
+if [ "$VERSION" != "2.0.0" ] && [ "$VERSION" != "3.0.0" ] && [ "$VERSION" != "4.0.1" ]; then
+VERSION="5.0.0"
 fi
 
 # Find a bundle
