@@ -36,12 +36,18 @@ for FILE in $BREWDIR/lib/*.a; do
 done
 
 # Copy configuration files
-if [ -d "/opt/X11/lib/X11/fontconfig" ]; then
+if [ -d "/opt/X11/etc/X11/fontconfig" ]; then
+	mkdir -p inst/etc
+	cp -rf /opt/X11/etc/X11/fontconfig inst/etc/
+	sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
+	rm -f inst/etc/fontconfig/*.bak
+elif [ -d "/opt/X11/lib/X11/fontconfig" ]; then
 	mkdir -p inst/etc
 	cp -rf /opt/X11/lib/X11/fontconfig inst/etc/
 	sed -i.bak "s#<cachedir>.*/var/cache/fontconfig#<cachedir>~/Library/Caches/magick#" inst/etc/fontconfig/fonts.conf
 	rm -f inst/etc/fontconfig/*.bak
 fi
+
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
