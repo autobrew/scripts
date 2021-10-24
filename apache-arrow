@@ -1,4 +1,5 @@
 # Set the default bundle version in case we don't have the exact package version
+VERSION="${VERSION:0:5}"
 if [ "$VERSION" != "2.0.0" ] && [ "$VERSION" != "3.0.0" ] && [ "$VERSION" != "4.0.1" ] && [ "$VERSION" != "5.0.0" ]; then
 VERSION="6.0.0"
 fi
