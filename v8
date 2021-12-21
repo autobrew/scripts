@@ -19,10 +19,6 @@ if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
   mkdir -p $BREWDIR/opt/v8
   ln -s $BREWDIR/{include,lib} $BREWDIR/opt/v8/
   ln -s $BREWDIR/lib $BREWDIR/opt/v8/libexec
-
-  # Cleanup
-  echo "rm -Rf .deps" >> cleanup
-  chmod +x cleanup
 fi
 
 # Hardcoded flags
