@@ -7,23 +7,24 @@ fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-
-# General setup
 BREWDIR="$PWD/.deps"
-mkdir -p $BREWDIR
-curl -sSL $bottle -o libs.tar.xz
-tar -xf libs.tar.xz --strip 1 -C $BREWDIR
-rm -f libs.tar.xz
 
-# package may look for /opt
-mkdir -p $BREWDIR/opt/v8
-ln -s $BREWDIR/{include,lib} $BREWDIR/opt/v8/
-ln -s $BREWDIR/lib $BREWDIR/opt/v8/libexec
+if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
+  mkdir -p $BREWDIR
+  curl -sSL $bottle -o libs.tar.xz
+  tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+  rm -f libs.tar.xz
+
+  # package may look for /opt
+  mkdir -p $BREWDIR/opt/v8
+  ln -s $BREWDIR/{include,lib} $BREWDIR/opt/v8/
+  ln -s $BREWDIR/lib $BREWDIR/opt/v8/libexec
+
+  # Cleanup
+  echo "rm -Rf .deps" >> cleanup
+  chmod +x cleanup
+fi
 
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lv8"
 PKG_CFLAGS="-I$BREWDIR/include"
-
-# Cleanup
-echo "rm -Rf .deps" >> cleanup
-chmod +x cleanup
