@@ -5,6 +5,9 @@ else
 bottle="https://autobrew.github.io/archive/catalina/v8-9.6.180.12-catalina.tar.xz"
 fi
 
+# Debug
+echo "Using autobrew bundle: $(basename $bottle)"
+
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 BREWDIR="$PWD/.deps"
