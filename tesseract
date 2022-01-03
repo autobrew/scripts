@@ -1,14 +1,10 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/tesseract-4.1.1-arm64_big_sur.tar.xz"
-EXTRALIBS="-lopenjp2 -lgif -lwebp -lwebpmux -lwebp"
+bottle="https://autobrew.github.io/archive/arm64_big_sur/tesseract-5.0.0-arm64_big_sur.tar.xz"
 elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://autobrew.github.io/archive/big_sur/tesseract-4.1.1-big_sur.tar.xz"
-EXTRALIBS="-lopenjp2 -lgif -lwebp -lwebpmux -lwebp"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/tesseract-4.1.1-high_sierra.tar.xz"
+bottle="https://autobrew.github.io/archive/big_sur/tesseract-5.0.0-big_sur.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/tesseract-4.1.1-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/high_sierra/tesseract-5.0.0-high_sierra.tar.xz"
 fi
 
 # Skip if disabled
@@ -23,7 +19,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/leptonica"
-PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept $EXTRALIBS -lpng16 -lz -ljpeg -ltiff -lcurl -lpthread"
+PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept -lopenjp2 -lgif -lwebp -lwebpmux -lwebp -lpng16 -lz -ljpeg -ltiff -lcurl -lpthread"
 
 # Ship tesseract training data
 mkdir -p inst
