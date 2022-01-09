@@ -6,7 +6,7 @@ bottle="https://autobrew.github.io/archive/big_sur/tesseract-5.0.0-big_sur.tar.x
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
 bottle="https://autobrew.github.io/archive/high_sierra/tesseract-5.0.0-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/tesseract-4.1.1-el_capitan.tar.xz"
+bottle="https://autobrew.github.io/archive/el_capitan/tesseract-5.0.0-el_capitan.tar.xz"
 fi
 
 # Skip if disabled
@@ -21,12 +21,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/leptonica"
-
-if [[ ${OSTYPE:6} -ge 17 ]]; then
 PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept -lopenjp2 -lgif -lwebp -lwebpmux -lwebp -lpng16 -lz -ljpeg -ltiff -lcurl -lpthread"
-else
-PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept -lpng16 -lz -ljpeg -ltiff -lcurl -lpthread"
-fi
 
 # Ship tesseract training data
 mkdir -p inst
