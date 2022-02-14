@@ -8,13 +8,12 @@ fi
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/apache-arrow-${VERSION}-arm64_big_sur.tar.xz"
 # See: https://github.com/Homebrew/homebrew-core/issues/76537
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
 #bottle="https://autobrew.github.io/archive/big_sur/apache-arrow-${VERSION}-big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/apache-arrow-${VERSION}-high_sierra.tar.xz"
+elif [[ ${OSTYPE:6:2} -lt 17 ]] && [[ ${VERSION:0:1} -lt 7 ]]; then
+bottle="https://autobrew.github.io/archive/el_capitan/apache-arrow-${VERSION}-el_capitan.tar.xz"
 else
-echo "This version of MacOS is no longer supported"
-exit 1
+bottle="https://autobrew.github.io/archive/high_sierra/apache-arrow-${VERSION}-high_sierra.tar.xz"
 fi
 
 # Skip if disabled
