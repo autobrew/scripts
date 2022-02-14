@@ -9,6 +9,9 @@ else
 bottle="https://autobrew.github.io/archive/el_capitan/jq-1.6-el_capitan.tar.xz"
 fi
 
+# Debug
+echo "Using autobrew bundle: $(basename $bottle)"
+
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 
