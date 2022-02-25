@@ -1,0 +1,23 @@
+# Find a bundle
+if [ $(arch | grep arm) ]; then
+bottle="https://autobrew.github.io/archive/arm64_big_sur/rrdtool-1.7.2_1-arm64_big_sur.tar.xz"
+elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
+bottle="https://autobrew.github.io/archive/big_sur/rrdtool-1.7.2_1-big_sur.tar.xz"
+else
+bottle="https://autobrew.github.io/archive/high_sierra/rrdtool-1.7.2-high_sierra.tar.xz"
+fi
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="-L${BREWDIR}/lib -lrrd"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
