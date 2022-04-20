@@ -44,3 +44,6 @@ done
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
+
+# Hotfix for warning
+sed -i '' 's|(const unsigned|(const|' src/rsvg.c || true
