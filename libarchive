@@ -1,8 +1,8 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/libarchive-3.5.1-arm64_big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://autobrew.github.io/archive/big_sur/libarchive-3.5.1-big_sur.tar.xz"
+#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#bottle="https://autobrew.github.io/archive/big_sur/libarchive-3.5.1-big_sur.tar.xz"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
 bottle="https://autobrew.github.io/archive/high_sierra/libarchive-3.5.1-high_sierra.tar.xz"
 else

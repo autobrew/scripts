@@ -1,8 +1,8 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/librsvg-2.50.3-arm64_big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 20 ]]; then
-bottle="https://autobrew.github.io/archive/big_sur/librsvg-2.50.3-big_sur.tar.xz"
+#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#bottle="https://autobrew.github.io/archive/big_sur/librsvg-2.50.3-big_sur.tar.xz"
 else
 bottle="https://autobrew.github.io/archive/high_sierra/librsvg-2.48.4-high_sierra.tar.xz"
 sed -i '' 's|(const unsigned|(const|' src/rsvg.c || true # Fix a warning with older api
