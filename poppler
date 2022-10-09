@@ -38,3 +38,8 @@ done
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
+
+# Temporary fix for CRAN warnings
+if [ $(arch | grep arm) ]; then
+sed -i '' 's/CXX11/CXX14/g' src/Makevars.in
+fi
