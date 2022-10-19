@@ -25,5 +25,5 @@ if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
 fi
 
 # Hardcoded flags
-PKG_LIBS="-L$BREWDIR/lib -lv8"
+PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
 PKG_CFLAGS="-I$BREWDIR/include"
