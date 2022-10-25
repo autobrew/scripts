@@ -1,7 +1,7 @@
 # Set the default bundle version in case we don't have the exact package version
 VERSION="${VERSION:0:5}"
-if [ "$VERSION" != "3.0.0" ] && [ "$VERSION" != "4.0.1" ] && [ "$VERSION" != "5.0.0" ] && [ "$VERSION" != "6.0.0" ] && [ "$VERSION" != "6.0.1" ] && [ "$VERSION" != "7.0.0" ] && [ "$VERSION" != "8.0.0" ] && [ "$VERSION" != "9.0.0" ]; then
-VERSION="9.0.0"
+if [ "$VERSION" != "3.0.0" ] && [ "$VERSION" != "4.0.1" ] && [ "$VERSION" != "5.0.0" ] && [ "$VERSION" != "6.0.0" ] && [ "$VERSION" != "6.0.1" ] && [ "$VERSION" != "7.0.0" ] && [ "$VERSION" != "8.0.0" ] && [ "$VERSION" != "9.0.0" ] && [ "$VERSION" != "10.0.0" ]; then
+VERSION="10.0.0"
 fi
 
 # Find a bundle
@@ -13,6 +13,7 @@ bottle="https://autobrew.github.io/archive/arm64_big_sur/apache-arrow-${VERSION}
 elif [[ ${OSTYPE:6:2} -lt 17 ]] && [[ ${VERSION:0:1} -lt 7 ]]; then
 bottle="https://autobrew.github.io/archive/el_capitan/apache-arrow-${VERSION}-el_capitan.tar.xz"
 else
+HSFLAGS="-D_LIBCPP_DISABLE_AVAILABILITY"
 bottle="https://autobrew.github.io/archive/high_sierra/apache-arrow-${VERSION}-high_sierra.tar.xz"
 fi
 
@@ -44,7 +45,7 @@ BROTLI_LIBS="-lbrotlienc-static -lbrotlidec-static -lbrotlicommon-static"
 fi
 
 PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS $BROTLI_LIBS -lpthread -lcurl"
-PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_PARQUET -DARROW_R_WITH_DATASET -DARROW_R_WITH_JSON -DARROW_R_WITH_S3 -DARROW_R_WITH_GCS"
+PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_PARQUET -DARROW_R_WITH_DATASET -DARROW_R_WITH_JSON -DARROW_R_WITH_S3 -DARROW_R_WITH_GCS $HSFLAGS"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
