@@ -1,6 +1,7 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/ffmpeg-4.3.1-arm64_big_sur.tar.xz"
+MMACOS="-mmacosx-version-min=11.0"
 #elif [[ ${OSTYPE:6} -ge 20 ]]; then
 #bottle="https://autobrew.github.io/archive/big_sur/ffmpeg-4.3.1-big_sur.tar.xz"
 elif [[ ${OSTYPE:6} -ge 17 ]]; then
@@ -24,8 +25,8 @@ mkdir -p $BREWDIR/opt/ffmpeg
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/ffmpeg/
 
 # pkg-config --libs-only-l --static libavfilter vorbis
-PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample -lavresample -lavutil -lvorbis -logg -liconv -lz -lm -framework AVFoundation"
-PKG_CFLAGS="-I$BREWDIR/include -DBUILD_AUTOBREW"
+PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample -lavresample -lavutil -lvorbis -logg -liconv -lz -lm -framework AppKit -framework AVFoundation"
+PKG_CFLAGS="-I$BREWDIR/include -DBUILD_AUTOBREW $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
