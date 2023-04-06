@@ -1,9 +1,5 @@
 # Note: the V8 package looks in a weird place under BREWDIR/opt/v8
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/v8-9.6.180.12-arm64_big_sur.tar.xz"
-else
-bottle="https://autobrew.github.io/archive/catalina/v8-9.6.180.12-catalina.tar.xz"
-fi
+bottle="https://github.com/autobrew/bundler/releases/download/v8-11.2.214.9/v8-11.2.214.9-universal.tar.xz"
 
 # Debug
 echo "Using autobrew bundle: $(basename $bottle)"
@@ -26,4 +22,8 @@ fi
 
 # Hardcoded flags
 PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
-PKG_CFLAGS="-I$BREWDIR/include"
+PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
+
+# Skip pointer-compression and sandbox feature tests
+sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|CXX17|" src/Makevars.in > src/Makevars
+exit 0
