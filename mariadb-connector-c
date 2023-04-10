@@ -1,16 +1,15 @@
-# Find a bottle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/mariadb-connector-c-3.1.11-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/mariadb-connector-c-3.1.11-big_sur.tar.xz"
-elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/mariadb-connector-c-3.1.11-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [[ ${OSTYPE:6:2} -lt 20 ]]; then
+bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.1.11-high_sierra.tar.xz"
+elif [ $(arch | grep arm) ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.3.4-arm64_big_sur.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/mariadb-connector-c-3.1.11-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.3.4-universal.tar.xz"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"
@@ -19,6 +18,14 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include/mariadb"
 PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcrypto"
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
 
 # Fix _GSS_ linking error in CMD check
 PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
