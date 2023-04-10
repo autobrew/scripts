@@ -1,4 +1,4 @@
-# Note: the V8 package looks in a weird place under BREWDIR/opt/v8
+# Big sur binary also works on high-sierra
 bottle="https://github.com/autobrew/bundler/releases/download/v8-11.2.214.9/v8-11.2.214.9-universal.tar.xz"
 
 # Debug
@@ -14,7 +14,7 @@ if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
   tar -xf libs.tar.xz --strip 1 -C $BREWDIR
   rm -f libs.tar.xz
 
-  # package may look for /opt
+  # old versions of V8 look under /opt
   mkdir -p $BREWDIR/opt/v8
   ln -s $BREWDIR/{include,lib} $BREWDIR/opt/v8/
   ln -s $BREWDIR/lib $BREWDIR/opt/v8/libexec
