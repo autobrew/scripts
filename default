@@ -1,9 +1,9 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/hiredis-1.0.0-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
 #bottle="https://autobrew.github.io/archive/big_sur/hiredis-1.0.0-big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
+elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
 bottle="https://autobrew.github.io/archive/high_sierra/hiredis-0.13.3-high_sierra.tar.xz"
 else
 bottle="https://autobrew.github.io/archive/el_capitan/hiredis-0.13.3-el_capitan.tar.xz"

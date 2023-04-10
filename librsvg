@@ -1,7 +1,7 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/librsvg-2.50.3-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
 #bottle="https://autobrew.github.io/archive/big_sur/librsvg-2.50.3-big_sur.tar.xz"
 else
 bottle="https://autobrew.github.io/archive/high_sierra/librsvg-2.48.4-high_sierra.tar.xz"
@@ -25,7 +25,7 @@ PKG_CFLAGS="-I$BREWDIR/include/librsvg-2.0 -I$BREWDIR/include/glib-2.0 -I$BREWDI
 PKG_CFLAGS="$PKG_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_32"
 
 # Remove this when we update gdk-pixbuf-static
-#if [[ ${OSTYPE:6} -ge 20 ]]; then
+#if [[ ${OSTYPE:6:2} -ge 20 ]]; then
 #PKG_CFLAGS="$PKG_CFLAGS -DGLIB_DISABLE_DEPRECATION_WARNINGS"
 #fi
 

@@ -1,9 +1,9 @@
 # Find a bundle
 if [ $(arch | grep arm) ]; then
 bottle="https://autobrew.github.io/archive/arm64_big_sur/jq-1.6-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
+#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
 #bottle="https://autobrew.github.io/archive/big_sur/jq-1.6-big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
+elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
 bottle="https://autobrew.github.io/archive/high_sierra/jq-1.6-high_sierra.tar.xz"
 else
 bottle="https://autobrew.github.io/archive/el_capitan/jq-1.6-el_capitan.tar.xz"
