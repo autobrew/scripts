@@ -1,5 +1,6 @@
 # Use legacy bundle on high-sierra
-if [[ ${OSTYPE:6:2} -lt 20 ]]; then
+DARWIN="${OSTYPE:6:2}"
+if [[ "$DARWIN" ]] && [[ "$DARWIN" -lt 20 ]]; then
 bottle="https://github.com/autobrew/bundler/releases/download/poppler-23.04.0/poppler-22.02.0-high_sierra.tar.xz"
 else
 bottle="https://github.com/autobrew/bundler/releases/download/poppler-23.04.0/poppler-23.04.0-universal.tar.xz"

@@ -1,5 +1,6 @@
 # Use legacy bundle on high-sierra
-if [[ ${OSTYPE:6:2} -lt 20 ]]; then
+DARWIN="${OSTYPE:6:2}"
+if [[ "$DARWIN" ]] && [[ "$DARWIN" -lt 20 ]]; then
 bottle="https://github.com/autobrew/bundler/releases/download/ffmpeg-5.1.2/ffmpeg-4.2.4-high_sierra.tar.xz"
 AVRESAMPLE="-lavresample"
 else
