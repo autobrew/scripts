@@ -44,8 +44,8 @@ if [ -f "$BREWDIR/lib/libbrotlienc-static.a" ]; then
 BROTLI_LIBS="-lbrotlienc-static -lbrotlidec-static -lbrotlicommon-static"
 fi
 
-PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS $BROTLI_LIBS -lpthread -lcurl"
-PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_PARQUET -DARROW_R_WITH_DATASET -DARROW_R_WITH_JSON -DARROW_R_WITH_S3 -DARROW_R_WITH_GCS $HSFLAGS"
+PKG_LIBS="-L$BREWDIR/lib -lparquet -larrow_dataset -larrow_acero -larrow -larrow_bundled_dependencies -lthrift -llz4 -lsnappy -lzstd $AWS_LIBS $BROTLI_LIBS -lpthread -lcurl"
+PKG_CFLAGS="-I$BREWDIR/include -DARROW_R_WITH_PARQUET -DARROW_R_WITH_ACERO  -DARROW_R_WITH_DATASET -DARROW_R_WITH_JSON -DARROW_R_WITH_S3 -DARROW_R_WITH_GCS $HSFLAGS"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
