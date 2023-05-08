@@ -1,18 +1,14 @@
-# Find a bundle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/cairo-1.16.0-arm64_big_sur.tar.xz"
-EXTRALIBS="-llzo2"
-#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/cairo-1.16.0-big_sur.tar.xz"
-#EXTRALIBS="-llzo2"
-elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/cairo-1.16.0-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/cairo-1.16.0_5/cairo-1.16.0-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/cairo-1.16.0-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/cairo-1.16.0_5/cairo-1.16.0_5-universal.tar.xz"
+EXTRALIBS="-llzo2"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"
