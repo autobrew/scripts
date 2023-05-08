@@ -1,14 +1,13 @@
-# Find a bundle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/libgit2-1.4.2-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/libgit2-1.4.2-big_sur.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/libgit2-1.4.2/libgit2-1.4.2-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/high_sierra/libgit2-1.4.2-high_sierra.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/libgit2-1.4.2/libgit2-1.4.2-universal.tar.xz"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"
