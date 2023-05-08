@@ -1,16 +1,13 @@
-# Find a bundle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/protobuf-3.14.0-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/protobuf-3.14.0-big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/protobuf-3.12.4-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/protobuf-21.12/protobuf-3.12.4-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/protobuf-3.12.4-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/protobuf-21.12/protobuf-21.12-universal.tar.xz"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"
@@ -24,24 +21,10 @@ PKG_CFLAGS="-DUSENEWAPI -I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lprotobuf"
 PATH="$BREWDIR/bin:$PATH"
 
-# Many packages expect ./opt/protobuf/bin/protoc
-mkdir -p $BREWDIR/opt/protobuf
-ln -s $BREWDIR/{include,lib,bin} $BREWDIR/opt/protobuf/
-
-# Workaround for protolite, remove when fixec
+# Workaround for protolite, remove when fixed
 echo "exit 0;" > "$BREWDIR/bin/pkg-config"
 chmod +x "$BREWDIR/bin/pkg-config"
-
-# Workaround for cld3 which does not use CXX11STD in configure pretest
-if [ "$R_PACKAGE_NAME" = "cld3" ];then
-PKG_TEST_HEADER="<string.h>"
-fi
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
-
-# Temporary fix for CRAN warnings
-if [ $(arch | grep arm) ]; then
-sed -i '' 's/CXX11/CXX17/g' src/Makevars.in
-fi
