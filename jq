@@ -1,15 +1,12 @@
-# Find a bundle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/jq-1.6-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/jq-1.6-big_sur.tar.xz"
-elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/jq-1.6-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/jq-1.6/jq-1.6-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/jq-1.6-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/jq-1.6/jq-1.6-universal.tar.xz"
 fi
 
-# Debug
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # Skip if disabled
