@@ -1,6 +1,5 @@
 # Use legacy bundle on high-sierra
-DARWIN="${OSTYPE:6:2}"
-if [[ "$DARWIN" ]] && [[ "$DARWIN" -lt 20 ]]; then
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/imagemagick-6.9.12-84/imagemagick-6.9.12-3-high_sierra.tar.xz"
 else
 bottle="https://github.com/autobrew/bundler/releases/download/imagemagick-6.9.12-84/imagemagick-6.9.12-84-universal.tar.xz"
