@@ -1,16 +1,13 @@
-# Find a bottle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/openssl-1.1.1j-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/openssl-1.1.1j-big_sur.tar.xz"
-elif [[ ${OSTYPE:6} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/openssl-1.1.1g-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/openssl-1.1.1t/openssl-1.1.1h-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/openssl-1.1.1g-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/openssl-1.1.1t/openssl-1.1.1t-universal.tar.xz"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"

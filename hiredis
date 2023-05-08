@@ -1,16 +1,13 @@
-# Find a bundle
-if [ $(arch | grep arm) ]; then
-bottle="https://autobrew.github.io/archive/arm64_big_sur/hiredis-1.0.0-arm64_big_sur.tar.xz"
-#elif [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#bottle="https://autobrew.github.io/archive/big_sur/hiredis-1.0.0-big_sur.tar.xz"
-elif [[ ${OSTYPE:6:2} -ge 17 ]]; then
-bottle="https://autobrew.github.io/archive/high_sierra/hiredis-0.13.3-high_sierra.tar.xz"
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/hiredis-1.1.0/hiredis-0.13.3-high_sierra.tar.xz"
 else
-bottle="https://autobrew.github.io/archive/el_capitan/hiredis-0.13.3-el_capitan.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/hiredis-1.1.0/hiredis-1.1.0-universal.tar.xz"
 fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
 BREWDIR="$PWD/.deps"
