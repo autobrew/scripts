@@ -1,8 +1,8 @@
 on:
-#  push:
+  push:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 0'
+#  schedule:
+#    - cron: '0 0 * * 0'
 
 name: Test CRAN packages
 
