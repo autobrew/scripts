@@ -15,12 +15,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'macos-10.15', 'macos-11.0']
+        os: [ 'macos-11', 'macos-12', 'macos-13']
     steps:
-      - uses: actions/checkout@v2
-
-      - name: install R
-        run: brew install --cask r
+      - uses: actions/checkout@v3
 
       - name: Remove homebrew
         run: |
