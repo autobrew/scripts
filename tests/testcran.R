@@ -1,5 +1,14 @@
 # Find cran packages with an autobrew script
 # You can set a GITHUB_PAT in travis settings
+
+
+begin <- function (txt){
+  cat(sprintf('::group::%s\n', txt))
+}
+end <- function(){
+  cat('::endgroup::\n')
+}
+
 options(repos = 'https://cloud.r-project.org')
 install.packages(c("jsonlite", "curl"))
 avail <- row.names(available.packages())
@@ -27,10 +36,13 @@ print(pkgs)
 #pkgs <- setdiff(pkgs, skiplist)
 
 # Install binary packages + dependencies
+begin('preparing')
 install.packages(pkgs, type = "binary")
+end()
 
 # Install packages from source
 results <- sapply(pkgs, function(pkg){
+  begin(pkg)
   try(remove.packages(pkg), silent = TRUE)
   install.packages(pkg, type = 'source')
   tryCatch({
@@ -38,6 +50,8 @@ results <- sapply(pkgs, function(pkg){
     TRUE
   }, error = function(e){
     FALSE
+  }, finally = function(e){
+    end()
   })
 })
 
