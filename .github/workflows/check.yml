@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * 0'
 
-name: Check all the packages
+name: Test CRAN packages
 
 jobs:
   macos:
@@ -18,6 +18,9 @@ jobs:
         os: [ 'macos-11', 'macos-12', 'macos-13']
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install R from cask (preinstall is homebrew)
+        run: brew install --cask r
 
       - name: Remove homebrew
         run: |
@@ -34,7 +37,6 @@ jobs:
           chmod 500 fakehome
           chmod +w fakehome/.gnupg
           unset GITHUB_ACTIONS
-          source tests/setupgdal.sh
-          HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript tests/fullcheck.R
+          HOME="$PWD/fakehome" PATH="$PATH:/Library/Frameworks/R.framework/Resources/bin" Rscript tests/testcran.R
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

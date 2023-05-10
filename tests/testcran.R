@@ -1,10 +1,23 @@
 # Find cran packages with an autobrew script
 # You can set a GITHUB_PAT in travis settings
 options(repos = 'https://cloud.r-project.org')
-install.packages("gh")
-res <- gh::gh('/search/code?per_page=100&q=autobrew+in:file+filename:configure+user:cran')
-pkgs <- vapply(res$items, function(x){x$repository$name}, "")
-pkgs <- sort(unique(pkgs))
+install.packages(c("jsonlite", "curl"))
+
+search_autobrew_repos <- function(){
+  h <- curl::new_handle(verbose=T)
+  curl::handle_setheaders(h,
+    "Accept" = "application/vnd.github+json",
+    "X-GitHub-Api-Version" = "2022-11-28",
+    "Authorization" = paste("Bearer", Sys.getenv('GITHUB_PAT')))
+  url <- 'https://api.github.com/search/code?q=autobrew+user:cran+filename:configure'
+  req <- curl::curl_fetch_memory(url, handle = h)
+  stopifnot(req$status != 300)
+  res <- jsonlite::fromJSON(rawToChar(req$content))
+  res$items$repository$name
+}
+
+# Find CRAN packages with autobrew script
+pkgs <- search_autobrew_repos()
 print(pkgs)
 
 # Broken packages that are not mine
