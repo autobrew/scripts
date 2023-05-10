@@ -2,6 +2,7 @@
 # You can set a GITHUB_PAT in travis settings
 options(repos = 'https://cloud.r-project.org')
 install.packages(c("jsonlite", "curl"))
+avail <- row.names(available.packages())
 
 search_autobrew_repos <- function(){
   h <- curl::new_handle(verbose=T)
@@ -18,6 +19,7 @@ search_autobrew_repos <- function(){
 
 # Find CRAN packages with autobrew script
 pkgs <- search_autobrew_repos()
+pkgs <- sort(intersect(pkgs, avail))
 print(pkgs)
 
 # Broken packages that are not mine
