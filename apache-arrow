@@ -6,9 +6,9 @@ if [[ "${VERSION:0:2}" -ge 12 ]]; then
 MOREFLAGS="-DARROW_R_WITH_ACERO"
 MORELIBS="-larrow_acero"
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/apache-arrow-${VERSION}/apache-arrow-12.0.0-high_sierra.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/apache-arrow-${VERSION}/apache-arrow-${VERSION}-high_sierra.tar.xz"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/apache-arrow-${VERSION}/apache-arrow-12.0.0-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/apache-arrow-${VERSION}/apache-arrow-${VERSION}-universal.tar.xz"
 fi
 else
 if [ $(arch | grep arm) ]; then
