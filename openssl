@@ -1,1 +1,28 @@
-openssl@1.1
+# Use legacy bundle on high-sierra
+if [ "x${OSTYPE:6:1}" = "x1" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/openssl-3.1.1/openssl-1.1.1h-high_sierra.tar.xz"
+else
+bottle="https://github.com/autobrew/bundler/releases/download/openssl-3.1.1/openssl-3.1.1-universal.tar.xz"
+fi
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
+export AUTOBREW=1
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+cp ${BREWDIR}/lib/libssl.a ${BREWDIR}/lib/libbrewssl.a
+cp ${BREWDIR}/lib/libcrypto.a ${BREWDIR}/lib/libbrewcrypto.a
+rm -f libs.tar.xz
+
+# Flags
+PKG_CFLAGS="-I${BREWDIR}/include -DOPENSSL_SUPPRESS_DEPRECATED"
+PKG_LIBS="-L${BREWDIR}/lib -lbrewssl -lbrewcrypto"
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
