@@ -1,5 +1,5 @@
-# Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
+# Use legacy bundle on high-sierra or oldrel (latest protobuf requires C++17)
+if [ "x${OSTYPE:6:1}" = "x1" ] || [ "${R_VERSION:0:3}" = "4.2" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/protobuf-21.12/protobuf-3.12.4-high_sierra.tar.xz"
 else
 bottle="https://github.com/autobrew/bundler/releases/download/protobuf-21.12/protobuf-21.12-universal.tar.xz"
