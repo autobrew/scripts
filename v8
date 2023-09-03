@@ -1,5 +1,5 @@
 # Big sur binary also works on high-sierra
-bottle="https://github.com/autobrew/bundler/releases/download/v8-11.5.150.22/v8-11.5.150.22-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/v8-11.7.439.14/v8-11.7.439.14-universal.tar.xz"
 
 # Debug
 echo "Using autobrew bundle: $(basename $bottle)"
