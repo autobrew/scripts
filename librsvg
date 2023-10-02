@@ -3,8 +3,8 @@ if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/librsvg-2.56.0/librsvg-2.48.4-high_sierra.tar.xz"
 sed -i '' 's|(const unsigned|(const|' src/rsvg.c || true # Fix a warning with older api
 else
-bottle="https://github.com/autobrew/bundler/releases/download/librsvg-2.56.0/librsvg-2.56.0-universal.tar.xz"
-NEWLIBS="-lzstd -lpcre2-8"
+bottle="https://github.com/autobrew/bundler/releases/download/librsvg-2.56.3/librsvg-2.56.3-universal.tar.xz"
+NEWLIBS="-lturbojpeg -lzstd -lpcre2-8"
 fi
 
 # Skip if disabled
@@ -30,7 +30,7 @@ PKG_CFLAGS="$PKG_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_32"
 #fi
 
 # pkg-config --libs-only-l --static librsvg-2.0 libpng cairo-gobject pangocairo gmodule-2.0 fribidi expat
-PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lgmodule-2.0 -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat $NEWLIBS -framework AVFoundation -framework AppKit \$(FOUNDATION_LIBS)"
+PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat $NEWLIBS -framework AVFoundation -framework AppKit \$(FOUNDATION_LIBS)"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
