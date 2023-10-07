@@ -1,13 +1,9 @@
 # Use legacy bundle on high-sierra
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/opencv-4.7.0_1/opencv-4.5.5-high_sierra.tar.xz"
-elif [ $(arch | grep arm) ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/opencv-4.7.0_1/opencv-4.7.0_1-arm64_big_sur.tar.xz"
-ARMLIBS=-ltegra_hal
-MORELIBS="-lsharpyuv -lquirc"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/opencv-4.7.0_1/opencv-4.7.0_1-universal.tar.xz"
-MORELIBS="-lsharpyuv -lquirc"
+bottle="https://github.com/autobrew/bundler/releases/download/opencv-4.8.1/opencv-4.8.1-universal.tar.xz"
+MORELIBS="-lturbojpeg -lsharpyuv -lquirc"
 fi
 
 # Skip if disabled
@@ -25,7 +21,7 @@ rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include/opencv4"
 
 # FROM: pkg-config --libs --static opencv4
-PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/opencv4/3rdparty -lopencv_stitching -lopencv_alphamat -lopencv_aruco -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_dpm -lopencv_highgui -lopencv_face -lopencv_fuzzy -lopencv_hfs -lopencv_img_hash -lopencv_intensity_transform -lopencv_line_descriptor -lopencv_quality -lopencv_rapid -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_stereo -lopencv_structured_light -lopencv_phase_unwrapping -lopencv_superres -lopencv_optflow -lopencv_surface_matching -lopencv_tracking -lopencv_datasets -lopencv_plot -lopencv_videostab -lopencv_videoio -lopencv_xfeatures2d -lopencv_shape -lopencv_ml -lopencv_ximgproc -lopencv_video -lopencv_xobjdetect -lopencv_objdetect -lopencv_calib3d -lopencv_imgcodecs -lopencv_features2d -lopencv_flann -lopencv_xphoto -lopencv_photo -lopencv_imgproc -lopencv_core -ltbb -llibopenjp2 $ARMLIBS -framework OpenCL -framework Accelerate -framework AVFoundation -lm -ldl -framework Cocoa -ljpeg -lwebp $MORELIBS -lpng -ltiff -lzstd -lz"
+PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/opencv4/3rdparty -lopencv_stitching -lopencv_alphamat -lopencv_aruco -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_dpm -lopencv_highgui -lopencv_face -lopencv_fuzzy -lopencv_hfs -lopencv_img_hash -lopencv_intensity_transform -lopencv_line_descriptor -lopencv_quality -lopencv_rapid -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_stereo -lopencv_structured_light -lopencv_phase_unwrapping -lopencv_superres -lopencv_optflow -lopencv_surface_matching -lopencv_tracking -lopencv_datasets -lopencv_plot -lopencv_videostab -lopencv_videoio -lopencv_xfeatures2d -lopencv_shape -lopencv_ml -lopencv_ximgproc -lopencv_video -lopencv_xobjdetect -lopencv_objdetect -lopencv_calib3d -lopencv_imgcodecs -lopencv_features2d -lopencv_flann -lopencv_xphoto -lopencv_photo -lopencv_imgproc -lopencv_core -ltbb -llibopenjp2 -framework OpenCL -framework Accelerate -framework AVFoundation -lm -ldl -framework Cocoa -ljpeg -lwebp $MORELIBS -lpng -ltiff -lzstd -lz"
 
 # Ship poppler training data
 mkdir -p inst/share
