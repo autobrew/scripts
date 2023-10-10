@@ -19,7 +19,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/leptonica"
-PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept -lopenjp2 -lgif -lwebp -lwebpmux -lwebp -lpng16 -lz -ljpeg -ltiff -lcurl $MORELIBS -lpthread"
+PKG_LIBS="-L${BREWDIR}/lib -ltesseract -llept -lopenjp2 -lgif -lwebpmux -lwebp -lpng16 -lz -ljpeg -ltiff -lcurl $MORELIBS -lpthread"
 
 # Ship tesseract training data
 mkdir -p inst
