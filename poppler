@@ -18,7 +18,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUNDLE_POPPLER_DATA -I${BREWDIR}/include/poppler/cpp -I${BREWDIR}/include/poppler"
-PKG_LIBS="-L${BREWDIR}/lib -lpoppler-cpp -lpoppler -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -llzo2 -llcms2 -lopenjp2 -ltiff -ljpeg -lzstd -lz -lm -lpthread"
+PKG_LIBS="-L${BREWDIR}/lib -lpoppler-cpp -lpoppler -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -llzo2 -llcms2 -lopenjp2 -ltiff -ljpeg -lzstd -lz -lm -liconv -lpthread"
 
 # Ship poppler training data
 mkdir -p inst/share

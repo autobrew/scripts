@@ -3,7 +3,7 @@ if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/tesseract-5.3.1/tesseract-5.0.1-high_sierra.tar.xz"
 else
 bottle="https://github.com/autobrew/bundler/releases/download/tesseract-5.3.1/tesseract-5.3.1-universal.tar.xz"
-MORELIBS="-lsharpyuv -lzstd"
+MORELIBS="-lsharpyuv -lzstd -larchive -framework Accelerate"
 fi
 
 # Skip if disabled

@@ -21,7 +21,7 @@ mkdir -p $BREWDIR/opt/libssh
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libssh/
 
 # Hardcoded flags
-PKG_LIBS="-L$BREWDIR/lib -lssh -lcrypto"
+PKG_LIBS="-L$BREWDIR/lib -lssh -lcrypto -lz"
 PKG_CFLAGS="-I$BREWDIR/include"
 
 # Try to fix _GSS_ linking error in CMD check

@@ -23,7 +23,7 @@ mkdir -p $BREWDIR/opt/ffmpeg
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/ffmpeg/
 
 # pkg-config --libs-only-l --static libavfilter vorbis
-PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample $AVRESAMPLE -lavutil -lvorbis -logg -liconv -lz -lm -framework AppKit -framework AVFoundation"
+PKG_LIBS="-L$BREWDIR/lib -lavfilter -lswscale -lpostproc -lavformat -lbz2 -lavcodec -lvpx -lmp3lame -lvorbisenc -lx264 -lxvidcore -lswresample $AVRESAMPLE -lavutil -lvorbis -logg -liconv -lz -lm -framework AppKit -framework AVFoundation -framework AudioToolbox -framework CoreMedia -framework VideoToolbox -framework CoreImage -framework Security -framework CoreVideo -framework Metal -framework OpenGL"
 PKG_CFLAGS="-I$BREWDIR/include -DBUILD_AUTOBREW $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
