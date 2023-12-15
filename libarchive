@@ -21,7 +21,7 @@ mkdir -p $BREWDIR/opt/larchive
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/larchive/
 
 # Hardcoded flags
-PKG_LIBS="-L$BREWDIR/lib -larchive -lexpat -llzma -lzstd -llz4 -lb2 -lbz2 -lz"
+PKG_LIBS="-L$BREWDIR/lib -larchive -lexpat -llzma -lzstd -llz4 -lb2 -lbz2 -lz -liconv"
 PKG_CFLAGS="-I$BREWDIR/include"
 
 # Cleanup
