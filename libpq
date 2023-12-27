@@ -26,7 +26,7 @@ PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lpq -lpgport -lpgcommon -lssl -lcrypto -lldap"
 
 # Try to fix _GSS_ linking error for 'rpg' package
-PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
+PKG_LIBS="$PKG_LIBS $(krb5-config --libs || echo -lkrb5)"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do

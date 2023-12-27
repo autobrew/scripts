@@ -28,7 +28,7 @@ for FILE in $BREWDIR/lib/*.a; do
 done
 
 # Fix _GSS_ linking error in CMD check
-PKG_LIBS="$PKG_LIBS $(krb5-config --libs)"
+PKG_LIBS="$PKG_LIBS $(krb5-config --libs || echo -lkrb5)"
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
