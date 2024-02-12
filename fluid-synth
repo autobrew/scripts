@@ -1,0 +1,27 @@
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+bottle="https://github.com/autobrew/bundler/releases/download/fluid-synth-2.3.4/fluid-synth-2.3.4-universal.tar.xz"
+echo "Using autobrew bundle: $(basename $bottle)"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Hardcoded flags
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="-L${BREWDIR}/lib -lfluidsynth -lsndfile -lmp3lame -lflac -lvorbisenc -lvorbis -logg -lopus -lmpg123 -lportaudio -lglib-2.0 -lintl -liconv -framework Foundation -framework AppKit -framework CoreAudio -framework CoreMidi -framework AudioToolbox"
+
+# Prevent linking against other libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
