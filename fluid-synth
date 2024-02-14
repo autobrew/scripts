@@ -1,6 +1,6 @@
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-bottle="https://github.com/autobrew/bundler/releases/download/fluid-synth-2.3.4/fluid-synth-2.3.4-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/fluid-synth-2.3.4_1/fluid-synth-2.3.4_1-universal.tar.xz"
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
