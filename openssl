@@ -2,7 +2,7 @@
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/openssl-3.1.1/openssl-1.1.1h-high_sierra.tar.xz"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/openssl-3.1.1/openssl-3.1.1-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/openssl-3.3.0/openssl-3.3.0-universal.tar.xz"
 fi
 
 # Skip if disabled
