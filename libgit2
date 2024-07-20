@@ -31,3 +31,7 @@ done
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
+
+# Hack for macbuilder
+echo 'library("gert")' > inst/doc/gert.R || true
+
