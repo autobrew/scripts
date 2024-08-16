@@ -30,3 +30,8 @@ PKG_LIBS="-L$BREWDIR/lib -ljq -lonig"
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
+
+# Disable vignettes on oldrel due to https://github.com/yihui/knitr/issues/2338
+if [ "${R_VERSION:0:3}" = "4.3" ]; then
+  echo '1+1' > inst/doc/*.R || true
+fi

@@ -24,6 +24,11 @@ fi
 PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
 PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
 
+# Disable vignettes on oldrel due to https://github.com/yihui/knitr/issues/2338
+if [ "${R_VERSION:0:3}" = "4.3" ]; then
+  echo 'library("V8")' > inst/doc/*.R || true
+fi
+
 # Skip pointer-compression and sandbox feature tests
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|CXX17|" src/Makevars.in > src/Makevars
 exit 0
