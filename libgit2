@@ -35,4 +35,5 @@ chmod +x cleanup
 # Disable vignettes on oldrel due to https://github.com/yihui/knitr/issues/2338
 if [ "${R_VERSION:0:3}" = "4.3" ]; then
   echo 'library("gert")' > inst/doc/*.R || true
+  echo '123' > inst/doc/*.Rmd || true
 fi
