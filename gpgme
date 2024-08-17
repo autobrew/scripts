@@ -24,6 +24,14 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/gpgme/
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lgpgme -lassuan -lgpg-error -lintl"
 
+# Prevent linking against other libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
+
 # Ship a standalone 'gpg'
 mkdir -p inst/bin
 cp -f $BREWDIR/bin/gpg1 inst/bin/gpg
