@@ -1,6 +1,11 @@
-# Big sur binary also works on high-sierra
-#bottle="https://github.com/autobrew/bundler/releases/download/v8-11.7.439.14/v8-11.7.439.14-universal.tar.xz"
+# New CXX20 binary requires at least MacOS 13
+if [ "${OSTYPE:6:2}0" -lt "230" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/v8-11.7.439.14/v8-11.7.439.14-universal.tar.xz"
+CXXSTD=CXX17
+else
 bottle="https://github.com/autobrew/bundler/releases/download/v8-12.7.224.16/v8-12.7.224.16-universal.tar.xz"
+CXXSTD=CXX20
+fi
 
 # Debug
 echo "Using autobrew bundle: $(basename $bottle)"
@@ -26,14 +31,6 @@ PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
 PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
 
 # Skip pointer-compression and sandbox feature tests
-sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|CXX20|" src/Makevars.in > src/Makevars
-
-# Disable purling on oldrel due to https://github.com/yihui/knitr/issues/2338
-if [ "${R_VERSION:0:3}" = "4.3" ]; then
-  for file in vignettes/*.Rmd; do
-    sed -i '' '/```/,$d' $file || true
-    touch inst/doc/*  || true
-  done
-fi
+sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|${CXXSTD}|" src/Makevars.in > src/Makevars
 
 exit 0

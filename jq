@@ -30,11 +30,3 @@ PKG_LIBS="-L$BREWDIR/lib -ljq -lonig"
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
-
-# Disable purling on oldrel due to https://github.com/yihui/knitr/issues/2338
-if [ "${R_VERSION:0:3}" = "4.3" ]; then
-  for file in vignettes/*.Rmd; do
-    sed -i '' '/```/,$d' $file || true
-    touch inst/doc/*  || true
-  done
-fi
