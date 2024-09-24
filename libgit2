@@ -2,7 +2,7 @@
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/libgit2-1.4.2/libgit2-1.4.2-high_sierra.tar.xz"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/libgit2-1.4.2/libgit2-1.4.2-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/libgit2-1.8.1/libgit2-1.8.1-universal.tar.xz"
 fi
 
 # Skip if disabled
