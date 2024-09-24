@@ -1,5 +1,5 @@
 # New CXX20 binary requires at least MacOS 13
-if [ "${OSTYPE:6:2}0" -lt "230" ]; then
+if [ "${OSTYPE:6:2}0" -lt "220" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/v8-11.7.439.14/v8-11.7.439.14-universal.tar.xz"
 CXXSTD=CXX17
 else
