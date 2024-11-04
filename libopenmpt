@@ -12,7 +12,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lopenmpt -lvorbisfile -lvorbis -logg -lopus -lmpg123 -lportaudiocpp -lportaudio -lz -framework Foundation -framework AppKit -framework CoreAudio -framework AudioToolbox"
+PKG_LIBS="-L${BREWDIR}/lib -lopenmpt -lflac -logg -lsndfile -lvorbis -lopus -lmpg123 -lportaudiocpp -lportaudio -lz -framework Foundation -framework AppKit -framework CoreAudio -framework AudioToolbox"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
