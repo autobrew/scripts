@@ -1,6 +1,10 @@
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+if [ $(arch | grep arm) ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/libopenmpt-0.7.11/libopenmpt-0.7.11-arm64_ventura.tar.xz"
+else
 bottle="https://github.com/autobrew/bundler/releases/download/libopenmpt-0.7.11/libopenmpt-0.7.11-universal.tar.xz"
+fi
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
