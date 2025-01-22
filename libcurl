@@ -1,0 +1,30 @@
+# Require MacOS 11 or up now
+if [ "x${OSTYPE:6:1}" = "x1" ]; then return 0; fi
+bottle="https://github.com/autobrew/bundler/releases/download/curl-8.11.1_1/curl-lite-8.11.1_1-universal.tar.xz"
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+
+# Download if we did not do it yet
+if [ ! -f "$BREWDIR/lib/libbrewcurl.a" ]; then
+  curl -sSL $bottle -o libs.tar.xz
+  tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+  rm -f libs.tar.xz
+fi
+
+# Hardcoded flags
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap $(krb5-config --libs) -lz -framework Security -framework SystemConfiguration"
+
+# Prevent linking against other libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+done
