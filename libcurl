@@ -17,9 +17,14 @@ if [ ! -f "$BREWDIR/lib/libbrewcurl.a" ]; then
   rm -f libs.tar.xz
 fi
 
+# Fix a linker warning on CRAN
+if [ "$MACOSX_DEPLOYMENT_TARGET" = "11.0" ]; then
+MMACOS="-mmacosx-version-min=11.3"
+fi
+
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap $(krb5-config --libs) -lz -framework Security -framework SystemConfiguration"
+PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap $(krb5-config --libs) -lz -framework Security -framework SystemConfiguration $MMACOS"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
