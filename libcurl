@@ -24,7 +24,8 @@ fi
 
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap $(krb5-config --libs) -lz -framework Security -framework SystemConfiguration $MMACOS"
+KERBEROS=$(krb5-config --libs)
+PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration $MMACOS"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
