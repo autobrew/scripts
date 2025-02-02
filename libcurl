@@ -34,3 +34,6 @@ for FILE in $BREWDIR/lib/*.a; do
   cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
   PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
 done
+
+# Backport patch for curl 6.2.0 cross compile on p3m cross
+sed -i '' 's|"^7"|"^7.[1-7]"|' R/options.R
