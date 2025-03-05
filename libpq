@@ -2,7 +2,7 @@
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/libpq-15.2/libpq-14.5-high_sierra.tar.xz"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/libpq-16.2/libpq-16.2-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/libpq-16.8/libpq-16.8-universal.tar.xz"
 fi
 
 # Skip if disabled
