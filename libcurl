@@ -27,12 +27,12 @@ PKG_CFLAGS="-I${BREWDIR}/include"
 KERBEROS=$(krb5-config --libs)
 PKG_LIBS="-L${BREWDIR}/lib -lcurl -lnghttp2 -lssl -lcrypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration $MMACOS"
 
-# Prevent linking against other libs in /usr/local/lib
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+  mv $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
 done
 
 # Backport patch for curl 6.2.0 cross compile on p3m cross

@@ -12,14 +12,14 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lfluidsynth -lsndfile -lmp3lame -lflac -lvorbisenc -lvorbis -logg -lopus -lmpg123 -lportaudio -lglib-2.0 -lintl -liconv -framework Foundation -framework AppKit -framework CoreAudio -framework CoreMidi -framework AudioToolbox"
+PKG_LIBS="-L${BREWDIR}/lib -lfluidsynth -lsndfile -lmp3lame -lFLAC -lvorbisenc -lvorbis -logg -lopus -lmpg123 -lportaudio -lglib-2.0 -lintl -liconv -framework Foundation -framework AppKit -framework CoreAudio -framework CoreMidi -framework AudioToolbox"
 
-# Prevent linking against other libs in /usr/local/lib
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+  mv $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
 done
 
 # Cleanup

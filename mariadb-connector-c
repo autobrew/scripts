@@ -23,8 +23,8 @@ PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcryp
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+  mv $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
 done
 
 # Fix _GSS_ linking error in CMD check

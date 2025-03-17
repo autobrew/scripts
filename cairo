@@ -18,15 +18,15 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
 # pkg-config --libs-only-l --static cairo
-PKG_LIBS="-L$BREWDIR/lib -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 -lz $EXTRALIBS"
+PKG_LIBS="-L$BREWDIR/lib -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 $EXTRALIBS -lz"
 PKG_CFLAGS="-I$BREWDIR/include -I$BREWDIR/include/cairo -I$BREWDIR/include/freetype2"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
   LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  cp -f $FILE $BREWDIR/lib/libbrew$LIBNAME.a
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s/-l$LIBNAME /-lbrew$LIBNAME /g")
+  cp $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
 done
 
 # Cleanup

@@ -19,7 +19,7 @@ search_autobrew_repos <- function(){
     "Accept" = "application/vnd.github+json",
     "X-GitHub-Api-Version" = "2022-11-28",
     "Authorization" = paste("Bearer", Sys.getenv('GITHUB_PAT')))
-  url <- 'https://api.github.com/search/code?q=autobrew+user:cran+filename:configure'
+  url <- 'https://api.github.com/search/code?per_page=100&q=autobrew+user:cran+filename:configure'
   req <- curl::curl_fetch_memory(url, handle = h)
   stopifnot(req$status != 300)
   res <- jsonlite::fromJSON(rawToChar(req$content))

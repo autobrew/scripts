@@ -6,6 +6,10 @@ on:
 
 name: Test CRAN packages
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   macos:
 
