@@ -17,6 +17,7 @@ mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
+rm -f $BREWDIR/lib/libpng.a
 
 # Set all the cflags
 PKG_CFLAGS="-I$BREWDIR/include/librsvg-2.0 -I$BREWDIR/include/glib-2.0 -I$BREWDIR/lib/glib-2.0/include -I$BREWDIR/include/gdk-pixbuf-2.0 -I$BREWDIR/include/cairo"

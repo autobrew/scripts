@@ -16,6 +16,7 @@ mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
+rm -f $BREWDIR/lib/libpng.a
 
 # pkg-config --libs-only-l --static cairo
 PKG_LIBS="-L$BREWDIR/lib -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 $EXTRALIBS -lz"

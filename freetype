@@ -15,9 +15,10 @@ mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
+rm -f $BREWDIR/lib/libpng.a
 
 # Hardcoded flags
-PKG_LIBS="-L$BREWDIR/lib -lfreetype -lpng -lz"
+PKG_LIBS="-L$BREWDIR/lib -lfreetype -lpng16 -lz"
 PKG_CFLAGS="-I$BREWDIR/include -I$BREWDIR/include/freetype2"
 
 # Prevent linking against other libs in /usr/local/lib

@@ -15,6 +15,7 @@ mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
+rm -f $BREWDIR/lib/libpng.a
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/freetype2"
