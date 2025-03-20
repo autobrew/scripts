@@ -30,6 +30,14 @@ fi
 PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
 PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
 
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  mv $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME|../.deps/$LIBNAME|g")
+done
+
 # Skip pointer-compression and sandbox feature tests
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|${CXXSTD}|" src/Makevars.in > src/Makevars
 
