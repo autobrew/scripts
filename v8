@@ -19,11 +19,6 @@ if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
   curl -sSL $bottle -o libs.tar.xz
   tar -xf libs.tar.xz --strip 1 -C $BREWDIR
   rm -f libs.tar.xz
-
-  # old versions of V8 look under /opt
-  mkdir -p $BREWDIR/opt/v8
-  ln -s $BREWDIR/{include,lib} $BREWDIR/opt/v8/
-  ln -s $BREWDIR/lib $BREWDIR/opt/v8/libexec
 fi
 
 # Hardcoded flags
@@ -31,12 +26,9 @@ PKG_LIBS="-L$BREWDIR/lib -lv8_monolith"
 PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
-for FILE in $BREWDIR/lib/*.a; do
-  BASENAME=$(basename $FILE)
-  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
-  mv $FILE $BREWDIR/$LIBNAME
-  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME|../.deps/$LIBNAME|g")
-done
+mv $BREWDIR/lib/libv8_monolith.a $BREWDIR/v8_monolith
+rm -Rf $BREWDIR/lib
+PKG_LIBS=$(echo $PKG_LIBS | sed "s|-lv8_monolith|../.deps/v8_monolith|g")
 
 # Skip pointer-compression and sandbox feature tests
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|CXX11|${CXXSTD}|" src/Makevars.in > src/Makevars
