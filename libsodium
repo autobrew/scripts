@@ -16,13 +16,13 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
-# package may look under /opt
-mkdir -p $BREWDIR/opt/libsodium
-ln -s $BREWDIR/{include,lib} $BREWDIR/opt/libsodium/
-
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
 PKG_LIBS="-L$BREWDIR/lib -lsodium -pthread"
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+mv $BREWDIR/lib/libsodium.a $BREWDIR/sodium
+PKG_LIBS=$(echo $PKG_LIBS | sed "s|-lsodium|../.deps/sodium|g")
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
