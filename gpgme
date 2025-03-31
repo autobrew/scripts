@@ -20,9 +20,14 @@ rm -f libs.tar.xz
 mkdir -p $BREWDIR/opt/gpgme
 ln -s $BREWDIR/{include,lib} $BREWDIR/opt/gpgme/
 
+# Fix a linker warning on CRAN
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+MMACOS="-mmacosx-version-min=13.0"
+fi
+
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
-PKG_LIBS="-L$BREWDIR/lib -lgpgme -lassuan -lgpg-error -lintl"
+PKG_LIBS="-L$BREWDIR/lib -lgpgme -lassuan -lgpg-error -lintl $MMACOS"
 
 # Prevent linking against other libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do

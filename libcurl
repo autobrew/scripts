@@ -18,7 +18,7 @@ if [ ! -f "$BREWDIR/lib/libbrewcurl.a" ]; then
 fi
 
 # Fix a linker warning on CRAN
-if [ "$MACOSX_DEPLOYMENT_TARGET" = "11.0" ]; then
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
 MMACOS="-mmacosx-version-min=11.3"
 fi
 
