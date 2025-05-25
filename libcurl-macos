@@ -1,0 +1,23 @@
+# Require MacOS 11 or up now
+if [ "x${OSTYPE:6:1}" = "x1" ]; then return 0; fi
+if [ "x${OSTYPE:6:2}" = "x20" ]; then return 0; fi
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
+# This is a special build of libcurl to link to macos native libressl
+bottle="https://github.com/autobrew/bundler/releases/download/curl-macos-8.13.0/curl-macos-8.13.0-universal.tar.xz?nocache=2"
+echo "Using autobrew bundle: $(basename $bottle)"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+
+# Extract and rename
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+mv ${BREWDIR}/lib/libcurl.a ${BREWDIR}/libcurl
+
+# Hardcoded flags
+PKG_CFLAGS="-I${BREWDIR}/include"
+KERBEROS=$(krb5-config --libs)
+PKG_LIBS="${BREWDIR}/libcurl -L${BREWDIR}/lib -lapple_nghttp2 -lapple_ssl -lapple_crypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration -framework CoreFoundation"
