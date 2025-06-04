@@ -1,6 +1,6 @@
 # Require MacOS 11 or up now
 if [ "x${OSTYPE:6:1}" = "x1" ]; then return 0; fi
-bottle="https://github.com/autobrew/bundler/releases/download/curl-8.11.1_1/curl-lite-8.11.1_1-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/curl-8.14.1/curl-lite-8.14.1-universal.tar.xz"
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
