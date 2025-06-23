@@ -21,3 +21,6 @@ mv ${BREWDIR}/lib/libcurl.a ${BREWDIR}/libcurl
 PKG_CFLAGS="-I${BREWDIR}/include"
 KERBEROS=$(krb5-config --libs)
 PKG_LIBS="${BREWDIR}/libcurl -L${BREWDIR}/lib -lapple_nghttp2 -lapple_ssl -lapple_crypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration -framework CoreFoundation"
+
+# Make sure to not query old libcurl anymore
+PKG_CONFIG_NAME="libcurl-backport"
