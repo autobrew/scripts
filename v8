@@ -1,5 +1,5 @@
 # New CXX20 binary requires at least MacOS 13, which we only want to assume on arm64
-if [ $(arch | grep arm) ]; then
+if [ $(arch | grep arm) ] || [ "$GET_LATEST_V8" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/v8-13.6.233.10/v8-13.6.233.10-universal.tar.xz"
 CXXSTD=CXX20
 else
