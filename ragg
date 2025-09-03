@@ -2,7 +2,7 @@
 if [ "x${OSTYPE:6:1}" = "x1" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/ragg-2.13.0_1/ragg-2.10.4-high_sierra.tar.xz"
 else
-bottle="https://github.com/autobrew/bundler/releases/download/ragg-2.13.0_1/ragg-2.13.0_1-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/ragg-2.13.3/ragg-2.13.3-universal.tar.xz"
 fi
 
 # Skip if disabled
@@ -19,7 +19,7 @@ rm -f $BREWDIR/lib/libpng.a
 
 # Hardcoded flags
 PKG_CFLAGS="-DBUILD_AUTOBREW -I${BREWDIR}/include -I${BREWDIR}/include/freetype2"
-PKG_LIBS="-L${BREWDIR}/lib -lfreetype -lbz2 -lpng16 -ltiff -ljpeg -lzstd -lz"
+PKG_LIBS="-L${BREWDIR}/lib -lfreetype -lbz2 -lpng16 -ltiff -lwebp -lwebpmux -lsharpyuv -ljpeg -lzstd -lz"
 
 # Custom locations
 mkdir -p $BREWDIR/opt/{freetype,libpng,libtiff,libjpeg}
