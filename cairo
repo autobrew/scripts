@@ -22,6 +22,9 @@ rm -f $BREWDIR/lib/libpng.a
 PKG_LIBS="-L$BREWDIR/lib -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lbz2 -lpng16 $EXTRALIBS -lz"
 PKG_CFLAGS="-I$BREWDIR/include -I$BREWDIR/include/cairo -I$BREWDIR/include/freetype2"
 
+# Fix broken -lpng symlink for unigd pkg
+cp -f $BREWDIR/lib/libpng16.a $BREWDIR/lib/libpng.a
+
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
   BASENAME=$(basename $FILE)
@@ -29,6 +32,7 @@ for FILE in $BREWDIR/lib/*.a; do
   cp $FILE $BREWDIR/$LIBNAME
   PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
 done
+
 
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
