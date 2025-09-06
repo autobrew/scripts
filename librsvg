@@ -1,11 +1,5 @@
-# Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/librsvg-2.56.0/librsvg-2.48.4-high_sierra.tar.xz"
-sed -i '' 's|(const unsigned|(const|' src/rsvg.c || true # Fix a warning with older api
-else
+# Requires MacOS 11 now
 bottle="https://github.com/autobrew/bundler/releases/download/librsvg-2.61.0/librsvg-2.61.0-universal.tar.xz"
-NEWLIBS="-lturbojpeg -lzstd -lpcre2-8"
-fi
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
@@ -25,13 +19,13 @@ PKG_CFLAGS="-I$BREWDIR/include/librsvg-2.0 -I$BREWDIR/include/glib-2.0 -I$BREWDI
 # Disable deprecation warnings
 PKG_CFLAGS="$PKG_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_32"
 
-# Remove this when we update gdk-pixbuf-static
-#if [[ ${OSTYPE:6:2} -ge 20 ]]; then
-#PKG_CFLAGS="$PKG_CFLAGS -DGLIB_DISABLE_DEPRECATION_WARNINGS"
-#fi
+# Suppess linker warnings on CRAN
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+MMACOS="-mmacosx-version-min=13.3"
+fi
 
 # pkg-config --libs-only-l --static librsvg-2.0 libpng cairo-gobject pangocairo gmodule-2.0 fribidi expat
-PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lcairo-gobject -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat -lxml2 $NEWLIBS -framework AVFoundation -framework AppKit \$(FOUNDATION_LIBS)"
+PKG_LIBS="-L$BREWDIR/lib -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lcairo-gobject -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lexpat -lxml2 -lturbojpeg -lzstd -lpcre2-8 -framework AVFoundation -framework AppKit \$(FOUNDATION_LIBS) $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
@@ -44,5 +38,3 @@ done
 # Cleanup
 echo "rm -Rf .deps" >> cleanup
 chmod +x cleanup
-
-
