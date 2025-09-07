@@ -1,9 +1,10 @@
-# Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/imagemagick-6.9.12-84/imagemagick-6.9.12-3-high_sierra.tar.xz"
-else
+# Use legacy bundle on big-sur
+if [ "x${OSTYPE:6:2}" = "x20" ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/imagemagick-6.9.12-93/imagemagick-6.9.12-93-universal.tar.xz"
-EXTRALIBS="-laom -lsharpyuv -lzstd -lpcre2-8"
+MORELIBS="-ljpeg"
+else
+bottle="https://github.com/autobrew/bundler/releases/download/imagemagick-6.9.13-29/imagemagick-6.9.13-29-universal.tar.xz"
+MORELIBS="-lturbojpeg -lvmaf"
 fi
 
 # Skip if disabled
@@ -21,8 +22,13 @@ rm -f $BREWDIR/lib/libpng.a
 # Set all the cflags
 PKG_CFLAGS="-DBUILD_AUTOBREW -DMAGICKCORE_HDRI_ENABLE=0 -DMAGICKCORE_QUANTUM_DEPTH=16 -I$BREWDIR/include/ImageMagick-6"
 
+# Suppess linker warnings on CRAN
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+MMACOS="-mmacosx-version-min=13.3"
+fi
+
 # Set the libs
-PKG_LIBS="-L$BREWDIR/lib -lMagick++-6.Q16 -lMagickWand-6.Q16 -lMagickCore-6.Q16 -lraw -ljasper -lheif -lde265 -lx265 -llcms2 -lwebpmux -lwebpdemux -lwebp -llzma -lopenjp2 -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -ljpeg -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lltdl -lexpat -lxml2 $EXTRALIBS -framework CoreGraphics -framework CoreText -framework CoreServices -framework AVFoundation \$(FOUNDATION_LIBS)"
+PKG_LIBS="-L$BREWDIR/lib -lMagick++-6.Q16 -lMagickWand-6.Q16 -lMagickCore-6.Q16 -lraw -ljasper -lheif -lde265 -lx265 -llcms2 -lwebpmux -lwebpdemux -lwebp -llzma -lopenjp2 -lrsvg-2 -lgio-2.0 -lresolv -lgdk_pixbuf-2.0 -ltiff -lcairo-gobject -lpangocairo-1.0 -lpangoft2-1.0 -lharfbuzz -lpango-1.0 -lgobject-2.0 -lffi -lcairo -lpixman-1 -lfontconfig -lfreetype -lbz2 -lpng16 -lz -lgmodule-2.0 -lglib-2.0 -lintl -liconv -lpcre -lfribidi -lltdl -laom -lsharpyuv -lzstd -lpcre2-8 $MORELIBS -lexpat -lxml2 -framework CoreGraphics -framework CoreText -framework CoreServices -framework AVFoundation \$(FOUNDATION_LIBS) $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
