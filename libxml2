@@ -1,0 +1,17 @@
+# Requires MacOS 11 or up
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+bottle="https://github.com/autobrew/bundler/releases/download/libxml2-2.14.4/libxml2-2.14.4-universal.tar.xz"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+
+# Extract and rename
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+mv ${BREWDIR}/lib/libxml2.a ${BREWDIR}/libxml2
+
+# Hardcoded flags
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="${BREWDIR}/libxml2 -lz -lpthread -licucore -lm"
