@@ -13,5 +13,5 @@ rm -f libs.tar.xz
 mv ${BREWDIR}/lib/libxml2.a ${BREWDIR}/libxml2
 
 # Hardcoded flags
-PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_CFLAGS="-I${BREWDIR}/include/libxml2 -I${BREWDIR}/include"
 PKG_LIBS="${BREWDIR}/libxml2 -lz -lpthread -licucore -lm"
