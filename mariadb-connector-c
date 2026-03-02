@@ -1,15 +1,14 @@
-# Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.1.11-high_sierra.tar.xz"
-elif [ $(arch | grep arm) ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.3.4-arm64_big_sur.tar.xz"
-else
-bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.3.4/mariadb-connector-c-3.3.4-universal.tar.xz"
-fi
+# This seems to work even on big-sur
+bottle="https://github.com/autobrew/bundler/releases/download/mariadb-connector-c-3.4.8/mariadb-connector-c-3.4.8-sonoma-universal.tar.xz"
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 echo "Using autobrew bundle: $(basename $bottle)"
+
+# Fix a linker warning on CRAN
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+MMACOS="-mmacosx-version-min=14.0"
+fi
 
 # General setup
 BREWDIR="$PWD/.deps"
@@ -17,7 +16,7 @@ mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR && rm -f libs.tar.xz
 PKG_CFLAGS="-I${BREWDIR}/include/mariadb"
-PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcrypto -lz"
+PKG_LIBS="-L${BREWDIR}/lib -L${BREWDIR}/lib/mariadb -lmariadbclient -lssl -lcrypto -lzstd -llzma -llz4 -lz $MMACOS"
 
 # NB: mariadb has libmariadbclient.a under subdirectory
 for FILE in $(find . -type f -name '*.a'); do
