@@ -17,8 +17,9 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
 # Export flags
+cp $BREWDIR/lib/libprotobuf.a $BREWDIR/libprotobuf
 PKG_CFLAGS="-DUSENEWAPI -I$BREWDIR/include"
-PKG_LIBS="-L$BREWDIR/lib -lprotobuf"
+PKG_LIBS="$BREWDIR/libprotobuf"
 PATH="$BREWDIR/bin:$PATH"
 
 # Workaround for protolite, remove when fixed
