@@ -15,14 +15,12 @@ BREWDIR="$PWD/.deps"
 mkdir -p $BREWDIR
 curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
-rm -f libs.tar.xz
-
-# package may look under opt
-mkdir -p $BREWDIR/opt/zeromq
-ln -s $BREWDIR/{include,lib} $BREWDIR/opt/zeromq/
+cp ${BREWDIR}/lib/libzmq.a ${BREWDIR}/zeromq
+cp ${BREWDIR}/lib/libsodium.a ${BREWDIR}/sodium
+rm -f libs.tar.xz ${BREWDIR}/lib/*
 
 # pkg-config --libs-only-l --static libzmq
-PKG_LIBS="-L$BREWDIR/lib -lzmq $MORELIBS"
+PKG_LIBS="${BREWDIR}/zeromq ${BREWDIR}/sodium"
 PKG_CFLAGS="-I$BREWDIR/include"
 
 # Cleanup
