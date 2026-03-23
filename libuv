@@ -1,0 +1,22 @@
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+bottle="https://github.com/autobrew/bundler/releases/download/libuv-1.52.0/libuv-1.52.0-sonoma-universal.tar.xz"
+echo "Using autobrew bundle: $(basename $bottle)"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Fix a linker warning on CRAN
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+MMACOS="-mmacosx-version-min=14.0"
+fi
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+cp $BREWDIR/lib/libuv.a $BREWDIR/libuv
+rm -Rf $BREWDIR/lib
+PKG_LIBS="$BREWDIR/libuv -lpthread -lm $MMACOS"
+PKG_CFLAGS="-I$BREWDIR/include"
