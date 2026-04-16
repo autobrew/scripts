@@ -1,10 +1,13 @@
-# New CXX20 binary requires at least MacOS 13, which we only want to assume on arm64
-if [ $(arch | grep arm) ] || [ "$GET_LATEST_V8" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/v8-14.6.202.26/v8-14.6.202.26-sonoma-universal.tar.xz"
-CXXSTD=CXX20
-else
+# New CXX20 binary requires at least MacOS 13, which we only want to require that on arm64
+if [ $(arch | grep i386) ]; then
 bottle="https://github.com/autobrew/bundler/releases/download/v8-11.7.439.14/v8-11.7.439.14-universal.tar.xz"
 CXXSTD=CXX17
+elif [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ]; then
+bottle="https://github.com/autobrew/bundler/releases/download/v8-13.6.233.17/v8-13.6.233.17-universal.tar.xz"
+CXXSTD=CXX20
+else
+bottle="https://github.com/autobrew/bundler/releases/download/v8-14.6.202.26/v8-14.6.202.26-sonoma-universal.tar.xz"
+CXXSTD=CXX20
 fi
 
 # Debug
