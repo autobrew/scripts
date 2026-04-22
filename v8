@@ -24,10 +24,14 @@ if [ ! -f ".deps/lib/libv8_monolith.a" ]; then
   rm -f libs.tar.xz
 fi
 
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m14" ]; then
+RCPPFIX="-DENABLE_LEGACY_NONAPI"
+fi
+
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 mv $BREWDIR/lib/libv8_monolith.a $BREWDIR/v8_monolith
 PKG_LIBS="../.deps/v8_monolith"
-PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX"
+PKG_CFLAGS="-I$BREWDIR/include -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX $RCPPFIX"
 rm -Rf $BREWDIR/lib
 
 # Skip pointer-compression and sandbox feature tests
