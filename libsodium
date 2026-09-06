@@ -1,13 +1,14 @@
 # Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/libsodium-1.0.18_1/libsodium-1.0.16-high_sierra.tar.xz"
-else
-bottle="https://github.com/autobrew/bundler/releases/download/libsodium-1.0.18_1/libsodium-1.0.18_1-universal.tar.xz"
-fi
+bottle="https://github.com/autobrew/bundler/releases/download/libsodium-1.0.22/libsodium-1.0.22-sonoma-universal.tar.xz"
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 echo "Using autobrew bundle: $(basename $bottle)"
+
+# Suppess linker warnings
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ] || [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m14" ]; then
+MMACOS="-mmacosx-version-min=14.8.5"
+fi
 
 # General setup
 BREWDIR="$PWD/.deps"
@@ -18,7 +19,7 @@ rm -f libs.tar.xz
 
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
-PKG_LIBS="-L$BREWDIR/lib -lsodium -pthread"
+PKG_LIBS="-L$BREWDIR/lib -lsodium -pthread $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 mv $BREWDIR/lib/libsodium.a $BREWDIR/sodium
