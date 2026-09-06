@@ -1,9 +1,5 @@
 # Use legacy bundle on high-sierra
-if [ "x${OSTYPE:6:1}" = "x1" ]; then
-bottle="https://github.com/autobrew/bundler/releases/download/jq-1.6/jq-1.6-high_sierra.tar.xz"
-else
-bottle="https://github.com/autobrew/bundler/releases/download/jq-1.6/jq-1.6-universal.tar.xz"
-fi
+bottle="https://github.com/autobrew/bundler/releases/download/jq-1.8.2/jq-1.8.2-sonoma-universal.tar.xz"
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
@@ -11,6 +7,11 @@ echo "Using autobrew bundle: $(basename $bottle)"
 
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+
+# Suppess linker warnings
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ] || [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m14" ]; then
+MMACOS="-mmacosx-version-min=14.8.5"
+fi
 
 # General setup
 BREWDIR="$PWD/.deps"
@@ -25,7 +26,7 @@ ln -s $BREWDIR/{include,lib} $BREWDIR/opt/jq/
 
 # Hardcoded flags
 PKG_CFLAGS="-I$BREWDIR/include"
-PKG_LIBS="-L$BREWDIR/lib -ljq -lonig -lz"
+PKG_LIBS="-L$BREWDIR/lib -ljq -lonig -lz $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
