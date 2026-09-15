@@ -1,6 +1,6 @@
 # Skip if disabled
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
-bottle="https://github.com/autobrew/bundler/releases/download/fluid-synth-2.3.4_1/fluid-synth-2.3.4_1-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/fluid-synth-2.6.0/fluid-synth-2.6.0-sonoma-universal.tar.xz"
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
@@ -10,9 +10,14 @@ curl -sSL $bottle -o libs.tar.xz
 tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 
+# Suppess linker warnings
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ] || [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m14" ]; then
+MMACOS="-mmacosx-version-min=14.8.5"
+fi
+
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
-PKG_LIBS="-L${BREWDIR}/lib -lfluidsynth -lsndfile -lmp3lame -lFLAC -lvorbisenc -lvorbis -logg -lopus -lmpg123 -lportaudio -lglib-2.0 -lintl -liconv -framework Foundation -framework AppKit -framework CoreAudio -framework CoreMidi -framework AudioToolbox"
+PKG_LIBS="-L${BREWDIR}/lib -lfluidsynth -lsndfile -lmp3lame -lFLAC -lvorbisenc -lvorbis -logg -lopus -lmpg123 -lportaudio -lglib-2.0 -lintl -liconv -framework Foundation -framework AppKit -framework CoreAudio -framework CoreMidi -framework AudioToolbox $MMACOS"
 
 # Prevent CRAN builder from linking against old libs in /usr/local/lib
 for FILE in $BREWDIR/lib/*.a; do
