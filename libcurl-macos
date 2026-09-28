@@ -4,7 +4,7 @@ if [ "x${OSTYPE:6:2}" = "x20" ]; then return 0; fi
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 
 # This is a special build of libcurl to link to macos native libressl
-bottle="https://github.com/autobrew/bundler/releases/download/curl-macos-8.14.1/curl-macos-8.14.1-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/curl-macos-8.14.2/curl-macos-8.14.2-sonoma-universal.tar.xz"
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
@@ -17,10 +17,15 @@ tar -xf libs.tar.xz --strip 1 -C $BREWDIR
 rm -f libs.tar.xz
 mv ${BREWDIR}/lib/libcurl.a ${BREWDIR}/libcurl
 
+# Suppess linker warnings
+if [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m11" ] || [ "m${MACOSX_DEPLOYMENT_TARGET:0:2}" = "m14" ]; then
+MMACOS="-mmacosx-version-min=14.8.5"
+fi
+
 # Hardcoded flags
 PKG_CFLAGS="-I${BREWDIR}/include"
 KERBEROS=$(krb5-config --libs)
-PKG_LIBS="${BREWDIR}/libcurl -L${BREWDIR}/lib -lapple_nghttp2 -lapple_ssl -lapple_crypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration -framework CoreFoundation"
+PKG_LIBS="${BREWDIR}/libcurl -L${BREWDIR}/lib -lapple_nghttp2 -lapple_ssl -lapple_crypto -lldap -lz ${KERBEROS:=-lkrb5} -framework Security -framework SystemConfiguration -framework CoreFoundation $MMACOS"
 
 # Make sure to not query old libcurl anymore
 PKG_CONFIG_NAME="libcurl-backport"
