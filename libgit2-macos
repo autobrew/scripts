@@ -1,0 +1,30 @@
+# Not used on CRAN because they have libgit2 recipe
+bottle="https://github.com/autobrew/bundler/releases/download/libgit2-macos-1.9.7/libgit2-macos-1.9.7-sonoma-universal.tar.xz"
+
+# Skip if disabled
+if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
+echo "Using autobrew bundle: $(basename $bottle)"
+
+# General setup
+BREWDIR="$PWD/.deps"
+mkdir -p $BREWDIR
+curl -sSL $bottle -o libs.tar.xz
+tar -xf libs.tar.xz --strip 1 -C $BREWDIR
+rm -f libs.tar.xz
+
+# Hardcoded flags
+PKG_CFLAGS="-I${BREWDIR}/include"
+PKG_LIBS="-L${BREWDIR}/lib -lgit2-macos -lssh2-openssl3 -lapple_ssl -lapple_crypto -lz -liconv -framework CoreFoundation -framework Security"
+
+# Prevent CRAN builder from linking against old libs in /usr/local/lib
+for FILE in $BREWDIR/lib/*.a; do
+  BASENAME=$(basename $FILE)
+  LIBNAME=$(echo "${BASENAME%.*}" | cut -c4-)
+  mv $FILE $BREWDIR/$LIBNAME
+  PKG_LIBS=$(echo $PKG_LIBS | sed "s|-l$LIBNAME |../.deps/$LIBNAME |g")
+done
+
+# Cleanup
+echo "rm -Rf .deps" >> cleanup
+chmod +x cleanup
+
