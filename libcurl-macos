@@ -4,7 +4,7 @@ if [ "x${OSTYPE:6:2}" = "x20" ]; then return 0; fi
 if [ "$DISABLE_AUTOBREW" ]; then return 0; fi
 
 # This is a special build of libcurl to link to macos native libressl
-bottle="https://github.com/autobrew/bundler/releases/download/curl-macos-8.14.2/curl-macos-8.14.2-sonoma-universal.tar.xz"
+bottle="https://github.com/autobrew/bundler/releases/download/curl-macos-8.14.20261014/curl-macos-8.14.20261014-sonoma-universal.tar.xz"
 echo "Using autobrew bundle: $(basename $bottle)"
 
 # General setup
